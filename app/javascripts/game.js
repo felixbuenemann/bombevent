@@ -12,7 +12,58 @@ window.onload = function() {
 
     this.onMessage = (function(event) {
       console.log("message received:");
-      console.log(event);
+      console.log(event.data);
+
+      var d = JSON.parse(event.data);
+      // console.log(d);
+
+      for (var i = 0; i < d.length; i++) {
+        // console.log(d[i]);
+
+        if (d[i].type == "position" && d[i].object_type == "player") {
+          // create our player entity with some premade components
+          if (players["" + d[i].id] == undefined) {
+            players["" + d[i].id] = Crafty.e("2D, Canvas, player, RightControls, Hero, Animate, Collision, KeyBoard")
+              .attr({x: 0, y: 0, z: 10})
+              .rightControls(playerSpeed)
+              .bind('KeyDown', function(e) {
+                // place bomb
+                if (e.key == Crafty.keys['SPACE']) {
+                  conn.sendMessage({type: "place_bomb" });
+                }
+              });
+          }
+
+          players["" + d[i].id].attr({x: d[i].coordinates[0] * spriteSize, y: d[i].coordinates[1] * spriteSize});
+          pendingMovement = false;
+
+        } else if (d[i].type == "position" && d[i].object_type == "block") {
+          gameobjects["" + d[i].id] = Crafty.e("2D, DOM, bush1").attr({x: d[i].coordinates[0] * spriteSize, y: d[i].coordinates[1] * spriteSize});
+
+        } else if (d[i].type == "position" && d[i].object_type == "bomb") {
+          console.log("bomb placed....");
+
+          gameobjects["" + d[i].id] = Crafty.e("2D, DOM, flower").attr({x: d[i].coordinates[0] * spriteSize, y: d[i].coordinates[1] * spriteSize});
+
+        } else if (d[i].type == "delete" && d[i].object_type == "bomb") {
+          console.log("BOOOOOOM!!!!!");
+
+          gameobjects["" + d[i].id].destroy();
+
+          // for (var key in gameobjects) {
+          //   var o = gameobjects[key];
+          // }
+
+        } else if (d[i].type == "delete" && d[i].object_type == "player") {
+          gameobjects["" + d[i].id].destroy();
+
+        } else if (d[i].type == "my_player_id" && d[i].object_type == "player_id") {
+          myPlayerID = d[i].player_id;
+
+        }
+
+      }
+
     });
 
     this.onError = (function(event) {
@@ -22,6 +73,7 @@ window.onload = function() {
 
     this.sendMessage = (function(msg) {
       msg = JSON.stringify(new Array(msg));
+      console.log("message sent: ");
       console.log(msg);
       ws.send(msg);
     });
@@ -42,6 +94,12 @@ window.onload = function() {
   var playerSpeed = 3;
   var canvasSizeX = spriteSize * 15;
   var canvasSizeY = spriteSize * 11;
+  var lastms = 0;
+  var gameobjects = new Object();
+  var players = new Object();
+  var pendingMovement = false;
+  var myPlayerID = null;
+
   // connect server
   var conn = new Connection;
   conn.init();
@@ -172,13 +230,28 @@ window.onload = function() {
                 dir = "up"
               } else if (this._y > from.y) {
                 dir = "down"
-              } 
-              console.log("direction: " + dir);
-              // send to server
-              conn.sendMessage({
-                type: "move",
-                direction: dir
-              });
+              }
+
+              var time = new Date();
+              var ms = time.getTime();
+
+              // console.log(ms);
+
+              // if ((ms - lastms) > 50) {
+              //   // console.log("direction: " + dir);
+              //   lastms = ms;
+
+              if (! pendingMovement) {
+                var pendingMovement = true;
+
+                // send to server
+                conn.sendMessage({
+                  type: "move",
+                  direction: dir
+                });
+
+              }
+              // }
             }
 					});
 				return this;
@@ -197,10 +270,8 @@ window.onload = function() {
 			}
 
 		});
-		
-		//create our player entity with some premade components
-		player = Crafty.e("2D, Canvas, player, RightControls, Hero, Animate, Collision")
-			.attr({x: 160, y: 144, z: 1})
-			.rightControls(playerSpeed);
-	});
+
+    conn.sendMessage({type: "load_map"});
+
+	}); // end scene
 };
