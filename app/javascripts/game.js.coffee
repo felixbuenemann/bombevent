@@ -52,10 +52,10 @@ class Game
 
     # turn the sprite map into usable components
     Crafty.sprite @spriteSize, "images/sprite.png",
-      grass1: [8,2]
-      grass2: [8,2]
-      grass3: [8,2]
-      grass4: [8,2]
+      floor1: [0,0]
+      floor2: [1,0]
+      floor3: [2,0]
+      floor4: [3,0]
       bomb:   [0,1]
       explosion: [0,2]
       player: [0,3]
@@ -109,7 +109,7 @@ class Game
       # generate the grass along the y-axis
       for j in [0..@canvasRows-1]
         grassType = Crafty.math.randomInt 1, 4
-        (Crafty.e "2D, Canvas, grass#{grassType}")
+        (Crafty.e "2D, Canvas, floor#{grassType}")
           .attr
             x: i * @spriteSize
             y: j * @spriteSize
@@ -213,9 +213,14 @@ class Game
           y: message.coordinates[1] * @spriteSize
 
       else if message.type == "position" && message.object_type == "bomb"
-        @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, bomb").attr
-          x: message.coordinates[0] * @spriteSize
-          y: message.coordinates[1] * @spriteSize
+        @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, bomb, SpriteAnimation").attr(
+            x: message.coordinates[0] * @spriteSize
+            y: message.coordinates[1] * @spriteSize
+          )
+          .animate("pulsate", 0, 1, 3)
+          .bind "EnterFrame", ->
+            unless @isPlaying()
+              @animate("pulsate", 60)
 
       else if message.type == "position" && message.object_type == "player"
         @player.attr
