@@ -24,4 +24,13 @@ module GameObject
   def add_to_game
     game.add_object(self)
   end
+
+  def delete_from_game
+    game.delete_object(self)
+  end
+
+  def delete
+    delete_from_game
+    send_delete
+  end
 end

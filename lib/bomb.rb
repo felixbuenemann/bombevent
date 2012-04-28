@@ -13,5 +13,6 @@ class Bomb
 
   def explode
     info("Booooooooooooooooom")
+    delete
   end
 end
