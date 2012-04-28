@@ -13,7 +13,7 @@ class Game
   end
 
   def init_map
-    [[2, 2], [2, 3], [2, 4], [3, 5]].each do |coordinate|
+    [[2, 2], [2, 3], [2, 4], [3, 3], [3, 5]].each do |coordinate|
       @game_objects << Block.new(self, coordinate)
     end
   end
