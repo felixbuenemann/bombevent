@@ -63,7 +63,6 @@ class Game
     Crafty.scene "loading", ->
       # load takes an array of assets and a callback when complete
       Crafty.load ["images/sprite.png"], ->
-        console.log "building scene"
         self.buildMainScene() # when everything is loaded, run the main scene
 
       # black background with some loading text
@@ -85,75 +84,17 @@ class Game
     self = @
     Crafty.scene "main", ->
       console.log "generating world"
-      self.generateWorld()
-
-      Crafty.c 'Hero',
-        init: ->
-          # setup animations
-          @requires("SpriteAnimation, Collision")
-            .animate("walk_left", 6, 3, 8)
-            .animate("walk_right", 9, 3, 11)
-            .animate("walk_up", 3, 3, 5)
-            .animate("walk_down", 0, 3, 2)
-            # change direction when a direction change event is received
-            .bind("NewDirection", (direction) ->
-                if direction.x < 0
-                  @stop().animate("walk_left", 10, -1) unless @isPlaying("walk_left")
-                if direction.x > 0
-                  @stop().animate("walk_right", 10, -1) unless @isPlaying("walk_right")
-                if direction.y < 0
-                  @stop().animate("walk_up", 10, -1) unless @isPlaying("walk_up")
-                if direction.y > 0
-                  @stop().animate("walk_down", 10, -1) unless @isPlaying("walk_down")
-                if !direction.x && !direction.y
-                  @stop()
-            )
-            # A rudimentary way to prevent the user from passing solid areas
-            # or out of boundary
-            .bind 'Moved', (from) ->
-              maxX = self.canvasSizeX - self.spriteSize
-              maxY = self.canvasSizeY - self.spriteSize
-              validX = @_x < 0 || @_x > maxX
-              validY = @_y < 0 || @_y > maxY
-              if @hit('solid') || validX || validY
-                @attr
-                  x: from.x
-                  y: from.y
-              else
-                dir = "left" if @_x < from.x
-                dir = "right" if @_x > from.x
-                dir = "up" if @_y < from.y
-                dir = "down" if @_y > from.y
-                console.log "direction: #{dir}"
-                # send to server
-                self.conn.sendMessage
-                  type: "move"
-                  direction: dir
-          this
-
-      Crafty.c "RightControls",
-        init: ->
-          @requires('Fourway')
-
-        rightControls: (speed) ->
-          #this.multiway(speed, {UP_ARROW: -90, DOWN_ARROW: 90, RIGHT_ARROW: 0, LEFT_ARROW: 180})
-          @fourway speed
-          this
-
-      # create our player entity with some premade components
-      player = (Crafty.e "2D, Canvas, player, RightControls, Hero, Animate, Collision")
-        .attr(
-          x: 160
-          y: 144
-          z: 1
-        )
-        .rightControls(self.playerSpeed)
+      self.buildWorld()
+      self.buildHero()
+      self.buildControls()
+      self.buildPlayer()
 
     # draw scene
     Crafty.scene("main")
 
   # method to randomly generate the map
-  generateWorld: ->
+  buildWorld: ->
+    self = @
     # generate the grass along the x-axis
     for i in [0..@canvasCols-1]
       # generate the grass along the y-axis
@@ -200,6 +141,75 @@ class Game
           x: @canvasSizeX - @spriteSize
           y: i * @spriteSize
           z: 2
+
+  buildHero: ->
+    self = @
+    Crafty.c 'Hero',
+      init: ->
+        # setup animations
+        @requires("SpriteAnimation, Collision")
+          .animate("walk_left", 6, 3, 8)
+          .animate("walk_right", 9, 3, 11)
+          .animate("walk_up", 3, 3, 5)
+          .animate("walk_down", 0, 3, 2)
+          # change direction when a direction change event is received
+          .bind("NewDirection", (direction) ->
+              if direction.x < 0
+                @stop().animate("walk_left", 10, -1) unless @isPlaying("walk_left")
+              if direction.x > 0
+                @stop().animate("walk_right", 10, -1) unless @isPlaying("walk_right")
+              if direction.y < 0
+                @stop().animate("walk_up", 10, -1) unless @isPlaying("walk_up")
+              if direction.y > 0
+                @stop().animate("walk_down", 10, -1) unless @isPlaying("walk_down")
+              if !direction.x && !direction.y
+                @stop()
+          )
+          # A rudimentary way to prevent the user from passing solid areas
+          # or out of boundary
+          .bind('Moved', (from) ->
+            maxX = self.canvasSizeX - self.spriteSize
+            maxY = self.canvasSizeY - self.spriteSize
+            validX = @_x < 0 || @_x > maxX
+            validY = @_y < 0 || @_y > maxY
+            if @hit('solid') || validX || validY
+              @attr
+                x: from.x
+                y: from.y
+            else
+              dir = "left" if @_x < from.x
+              dir = "right" if @_x > from.x
+              dir = "up" if @_y < from.y
+              dir = "down" if @_y > from.y
+              console.log "direction: #{dir}"
+              # send to server
+              self.conn.sendMessage
+                type: "move"
+                direction: dir
+          )
+          this
+
+  buildControls: ->
+    self = @
+    Crafty.c "RightControls",
+      init: ->
+        @requires('Fourway')
+
+      rightControls: (speed) ->
+        #this.multiway(speed, {UP_ARROW: -90, DOWN_ARROW: 90, RIGHT_ARROW: 0, LEFT_ARROW: 180})
+        @fourway speed
+        this
+
+  buildPlayer: ->
+    self = @
+    # create our player entity with some premade components
+    player = (Crafty.e "2D, Canvas, player, RightControls, Hero, Animate, Collision")
+      .attr(
+        x: 160
+        y: 144
+        z: 1
+      )
+      .rightControls(self.playerSpeed)
 
 window.onload = ->
   game = new Game
