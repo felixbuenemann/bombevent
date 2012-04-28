@@ -30,6 +30,8 @@ module Events
         type = json.delete('type').capitalize
         klass = Events.const_get(type)
         klass.new json
+      when Array
+        json.map { |v| parse(v) }
       else
         raise "needs JSON String or Hash"
       end
