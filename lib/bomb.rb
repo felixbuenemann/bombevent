@@ -20,4 +20,8 @@ class Bomb
     explosion.add_to_game
     explosion.send_position
   end
+
+  def solid?
+    false
+  end
 end
