@@ -2,12 +2,9 @@ require 'json'
 
 module Events
   class Base
-    attr_accessor :game_object
-
     def as_json(*)
       {
-        type:   self.class.name.downcase.gsub('events::',''),
-        game_object: game_object,
+        type: self.class.name.downcase.gsub('events::',''),
       }
     end
 
