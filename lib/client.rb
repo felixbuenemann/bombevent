@@ -11,6 +11,7 @@ class Client
     @game, @websocket = game, websocket
     @player = Player.new(game)
     @game.add_player(@player)
+    @player.send_position
     @game.subscribe { |event| send_event(event) }
     websocket.onmessage { |msg| process_message(msg) }
   end

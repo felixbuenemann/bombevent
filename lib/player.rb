@@ -20,7 +20,10 @@ class Player
     when :right
       coordinates[0] += 1
     end
+    send_position
+  end
 
+  def send_position
     @game.send(Events::Position.new(self, coordinates))
   end
 end
