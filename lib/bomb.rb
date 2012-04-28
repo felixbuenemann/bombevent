@@ -19,7 +19,7 @@ class Bomb
     x, y = coordinates
     add_explosion_at(x, y)
     [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]].each do |xn, yn|
-      add_explosion_at(xn, yn) if game.non_destroyable_object_at?(xn, yn)
+      add_explosion_at(xn, yn) unless game.non_destroyable_object_at?(xn, yn)
     end
   end
 
