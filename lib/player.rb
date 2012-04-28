@@ -25,7 +25,8 @@ class Player
   end
 
   def valid_coordinates?(x, y)
-    true # FIXME
+    (0..game.map_size[0]).include?(x) &&
+      (0..game.map_size[1]).include?(y)
   end
 end
 
