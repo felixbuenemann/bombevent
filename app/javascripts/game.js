@@ -1,17 +1,23 @@
 window.onload = function() {
   function Connection() {
-    var serverUri = "ws://" + document.location.host.replace(/:3000/, ':3004') + '/';
+    var serverUri = "ws://" + document.location.host.replace(/:3000/, ':3001') + '/';
 
     this.onOpen = (function(event) {
+      console.log("connection opened");
     });
 
     this.onClose = (function(event) {
+      console.log("connection closed");
     });
 
     this.onMessage = (function(event) {
+      console.log("message received:");
+      console.log(event);
     });
 
     this.onError = (function(event) {
+      console.log("connection error:");
+      console.log(event);
     });
 
     this.sendMessage = (function(msg) {
@@ -21,6 +27,7 @@ window.onload = function() {
     });
 
     this.init = (function() {
+      console.log("init server: " + serverUri);
       // connect socket
       ws = new WebSocket(serverUri);
       ws.onopen = this.onOpen;
