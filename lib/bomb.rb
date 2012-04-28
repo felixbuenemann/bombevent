@@ -1,5 +1,7 @@
 require 'eventmachine'
 require 'game_object'
+require 'explosion'
+require 'logging'
 
 class Bomb
   include GameObject
@@ -14,5 +16,8 @@ class Bomb
   def explode
     info("Booooooooooooooooom")
     delete
+    explosion = Explosion.new(game, coordinates)
+    explosion.add_to_game
+    explosion.send_position
   end
 end
