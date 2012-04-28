@@ -47,13 +47,8 @@ class Player
   end
 
   def place_bomb
-<<<<<<< HEAD
     return if @dead || @bombs.count >= @max_bombs
-    bomb = Bomb.new(game, round_coordinates)
-=======
-    return if @bombs.count >= @max_bombs
     bomb = Bomb.new(game, round_coordinates, @explosion_size)
->>>>>>> adds bomb radius
     @bombs << bomb
     bomb.add_to_game
     bomb.send_position
