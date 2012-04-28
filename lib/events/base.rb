@@ -27,7 +27,7 @@ module Events
       when String
         parse(JSON(json))
       when Hash
-        type = json.delete('type').capitalize
+        type = json.delete('type').split(/_/).map(&:capitalize).join
         klass = Events.const_get(type)
         klass.new json
       when Array
