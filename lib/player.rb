@@ -14,9 +14,16 @@ class Player
     self.coordinates = game.next_spawn_position
     @bombs = Array.new
     @max_bombs = INITIAL_MAX_BOMBS
+    @dead = false
+  end
+
+  def delete
+    @dead = true
+    super
   end
 
   def move(direction)
+    return if @dead
     new_coordinates = coordinates.dup
     case direction.to_sym
     when :up
@@ -39,7 +46,7 @@ class Player
   end
 
   def place_bomb
-    return if @bombs.count >= @max_bombs
+    return if @dead || @bombs.count >= @max_bombs
     bomb = Bomb.new(game, round_coordinates)
     @bombs << bomb
     bomb.add_to_game
