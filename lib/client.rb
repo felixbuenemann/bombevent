@@ -26,8 +26,8 @@ class Client
     when Events::Delete
       # TODO
     when Events::Loadmap
-      events = @game.players.map do |player|
-        Events::Position.new player
+      events = @game.game_objects.map do |object|
+        Events::Position.new object
       end
       send_events(events)
     end

@@ -1,8 +1,6 @@
 require 'em/channel'
 
 class Game
-  attr_reader :players
-
   def initialize(map_size = [15,11])
     @channel  = EventMachine::Channel.new
     @players  = Array.new
@@ -19,5 +17,9 @@ class Game
 
   def send(event)
     @channel.push(event)
+  end
+
+  def game_objects
+    @player # + @bombs ...
   end
 end

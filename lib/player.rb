@@ -1,5 +1,4 @@
 require 'game_object'
-require 'events/position'
 
 class Player
   include GameObject
