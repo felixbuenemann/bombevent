@@ -1,4 +1,4 @@
-require 'events/base.rb'
-require 'events/delete.rb'
-require 'events/move.rb'
+require 'events/base'
+require 'events/delete'
+require 'events/move'
 require 'events/my_player_id'
