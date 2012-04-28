@@ -236,13 +236,15 @@ class Game
 
       # any player has moved
       else if message.type == "position" && message.object_type == "player"
-        @player.attr
-          x: message.coordinates[0] * @spriteSize
-          y: message.coordinates[1] * @spriteSize
-
         # assign own player id to user on first movement =)
         if message.id == @myPlayerId
           @players[(String) message.id] = @player
+        else if typeof @players[(String) message.id] is undefined
+          @player = (Crafty.e "2D, DOM, player")
+
+        @player.attr
+          x: message.coordinates[0] * @spriteSize
+          y: message.coordinates[1] * @spriteSize
 
       # someone dies
       else if message.type == "delete" && message.object_type == "player"
