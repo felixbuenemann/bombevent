@@ -6,7 +6,7 @@ module Events
 
     def as_json(*)
       super.merge(
-        my_player_id: player.id,
+        my_player_id: @player.id,
       )
     end
   end
