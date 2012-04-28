@@ -11,7 +11,8 @@ require 'thin'
 require 'sprockets'
 
 require './app/bomb_app'
-# require 'connection'
+require 'game'
+require 'client'
 
 Thin::Logging.debug = true
 
@@ -31,9 +32,10 @@ EventMachine.run do
   server.threaded = true
   server.start
 
+  game = Game.new
   EventMachine::WebSocket.start(host: '0.0.0.0', port: 3001) do |ws|
     ws.onopen do
-      # connection = Connection.new(chat, ws)
+      Client.new(game, ws)
     end
   end
 end
