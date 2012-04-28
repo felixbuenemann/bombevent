@@ -10,7 +10,7 @@ class Client
     info("New connection")
     @game, @websocket = game, websocket
     @player = Player.new(game)
-    @game.add_player(@player)
+    @player.add_to_game
     send_event Events::MyPlayerId.new(@player)
     @player.send_position
     @game.subscribe { |event| send_event(event) }

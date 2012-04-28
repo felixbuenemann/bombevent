@@ -20,4 +20,8 @@ module GameObject
   def round_coordinates
     coordinates.map(&:round)
   end
+
+  def add_to_game
+    game.add_object(self)
+  end
 end

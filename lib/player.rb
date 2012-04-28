@@ -33,7 +33,7 @@ class Player
 
   def place_bomb
     bomb = Bomb.new(game, round_coordinates)
-    game.add_bomb(bomb)
+    bomb.add_to_game
     bomb.send_position
   end
 end
