@@ -19,7 +19,12 @@ class Client
 
   def process_message(msg)
     debug("Recieved message: #{msg}")
-    event = Events::Base.parse(msg)
+    events = Events::Base.parse(msg)
+    events.each { |event| process_event(event) }
+  end
+
+  def process_event(event)
+    debug(event.class)
     case event
     when Events::Move
       @player.move(event.direction)
@@ -34,7 +39,6 @@ class Client
   end
 
   def send_event(event)
-    debug("Send message: #{Array(event).to_json}")
     @websocket.send(Array(event).to_json)
   end
 end
