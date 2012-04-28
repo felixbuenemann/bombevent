@@ -77,7 +77,7 @@ class Game
         )
         .text("Loading")
         .css("text-align": "center")
-    
+
     # automatically play the loading scene
     Crafty.scene("loading")
 
@@ -129,7 +129,7 @@ class Game
                 self.conn.sendMessage
                   type: "move"
                   direction: dir
-          return this
+          this
 
       Crafty.c "RightControls",
         init: ->
