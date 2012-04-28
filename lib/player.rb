@@ -41,8 +41,8 @@ class Player
   end
 
   def valid_coordinates?(x, y)
-    (0..game.map_size[0]).include?(x) &&
-      (0..game.map_size[1]).include?(y) &&
+    (0..game.map_size[0] - 1).include?(x) &&
+      (0..game.map_size[1] - 1).include?(y) &&
       !game.solid_object_at?(x,y)
   end
 
