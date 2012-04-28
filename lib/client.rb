@@ -24,7 +24,6 @@ class Client
   end
 
   def process_event(event)
-    debug("Send event: #{event.inspect}")
     case event
     when Events::Move
       @player.move(event.direction)
@@ -39,6 +38,7 @@ class Client
   end
 
   def send_event(event)
+    debug("Send event: #{Array(event).to_json}")
     @websocket.send(Array(event).to_json)
   end
 end
