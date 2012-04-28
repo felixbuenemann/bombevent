@@ -12,5 +12,9 @@ class Explosion
     end
     EventMachine::add_timer(seconds) { delete }
   end
+
+  def destroyable?
+    false
+  end
 end
 

@@ -16,7 +16,15 @@ class Bomb
   def explode
     info("Booooooooooooooooom")
     delete
-    explosion = Explosion.new(game, coordinates)
+    x, y = coordinates
+    add_explosion_at(x, y)
+    [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]].each do |xn, yn|
+      add_explosion_at(xn, yn) unless game.non_destroyable_object_at?(xn, yn)
+    end
+  end
+
+  def add_explosion_at(x, y)
+    explosion = Explosion.new(game, [x, y])
     explosion.add_to_game
     explosion.send_position
   end

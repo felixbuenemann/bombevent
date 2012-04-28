@@ -4,22 +4,24 @@ require 'bomb'
 class Player
   include GameObject
 
+  SPEED = 0.2
+
   def initialize(game)
     self.game = game
-    self.coordinates = [0.0, 0.0]
+    self.coordinates = game.next_spawn_position
   end
 
   def move(direction)
     new_coordinates = coordinates.dup
     case direction.to_sym
     when :up
-      new_coordinates[1] = (new_coordinates[1] - 0.2).round(2)
+      new_coordinates[1] = (new_coordinates[1] - SPEED).round(2)
     when :down
-      new_coordinates[1] = (new_coordinates[1] + 0.2).round(2)
+      new_coordinates[1] = (new_coordinates[1] + SPEED).round(2)
     when :left
-      new_coordinates[0] = (new_coordinates[0] - 0.2).round(2)
+      new_coordinates[0] = (new_coordinates[0] - SPEED).round(2)
     when :right
-      new_coordinates[0] = (new_coordinates[0] + 0.2).round(2)
+      new_coordinates[0] = (new_coordinates[0] + SPEED).round(2)
     end
     self.coordinates = new_coordinates if valid_coordinates?(*new_coordinates)
     send_position
