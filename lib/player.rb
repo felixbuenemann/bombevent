@@ -15,6 +15,7 @@ class Player
     @bombs = Array.new
     @max_bombs = INITIAL_MAX_BOMBS
     @dead = false
+    @explosion_size = 3
   end
 
   def delete
@@ -46,8 +47,13 @@ class Player
   end
 
   def place_bomb
+<<<<<<< HEAD
     return if @dead || @bombs.count >= @max_bombs
     bomb = Bomb.new(game, round_coordinates)
+=======
+    return if @bombs.count >= @max_bombs
+    bomb = Bomb.new(game, round_coordinates, @explosion_size)
+>>>>>>> adds bomb radius
     @bombs << bomb
     bomb.add_to_game
     bomb.send_position
