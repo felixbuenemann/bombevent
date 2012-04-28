@@ -1,30 +1,33 @@
 class Connection
-  constructor: ->
+  constructor: (options = {}) ->
     serverUri = "ws://" + document.location.host.replace(/:3000/, ':3001') + '/'
     console.log("init server: " + serverUri)
+
     # connect socket
     @socket = new WebSocket(serverUri)
-    @socket.onopen = @onOpen
-    @socket.onclose = @onClose
-    @socket.onmessage = @onMessage
-    @socket.onerror = @onError
+    @socket.onopen = options.onOpen ? @onOpen
+    @socket.onclose = options.onClose ? @onClose
+    @socket.onmessage = options.onMessage ? @onMessage
+    @socket.onerror = options.onError ? @onError
 
-  onOpen: (event) ->
+  onOpen: (event) =>
     console.log "connection opened"
 
-  onClose: (event) ->
+  onClose: (event) =>
     console.log "connection closed"
+    # alert "connection to server lost"
 
-  onMessage: (event) ->
+  onMessage: (event) =>
     console.log "message received:"
     console.log event
 
-  onError: (event) ->
+  onError: (event) =>
     console.log("connection error:")
-    console.log(event)
+    console.log event
 
   sendMessage: (message) ->
     message = JSON.stringify [message]
+    console.log "sent message:"
     console.log message
     @socket.send message
 
@@ -36,8 +39,12 @@ class Game
     @canvasRows = 11
     @canvasSizeX = @spriteSize * @canvasCols
     @canvasSizeY = @spriteSize * @canvasRows
+    @gameObjects = {}
+    @myPlayerId = null
+
     # connect server
     @conn = new Connection
+      onMessage: @processServerMessage
 
     # start crafty
     Crafty.init @canvasSizeX, @canvasSizeY
@@ -45,14 +52,16 @@ class Game
 
     # turn the sprite map into usable components
     Crafty.sprite @spriteSize, "images/sprite.png",
-      grass1: [0,0]
-      grass2: [1,0]
-      grass3: [2,0]
-      grass4: [3,0]
-      flower: [0,1]
-      bush1:  [0,2]
-      bush2:  [1,2]
+      grass1: [8,2]
+      grass2: [8,2]
+      grass3: [8,2]
+      grass4: [8,2]
+      bomb:   [0,1]
+      explosion: [0,2]
       player: [0,3]
+      wall: [9,2]
+      metal: [10,2]
+      box: [11,2]
 
   start: ->
     @preloader()
@@ -144,7 +153,8 @@ class Game
               dir = "right" if @_x > from.x
               dir = "up" if @_y < from.y
               dir = "down" if @_y > from.y
-              console.log "direction: #{dir}"
+              # console.log "direction: #{dir}"
+
               # send to server
               self.conn.sendMessage
                 type: "move"
@@ -166,13 +176,60 @@ class Game
   buildPlayer: ->
     self = @
     # create our player entity with some premade components
-    player = (Crafty.e "2D, Canvas, player, RightControls, Hero, Animate, Collision")
+    @player = (Crafty.e "2D, Canvas, player, RightControls, Hero, Animate, Collision, KeyBoard")
       .attr(
-        x: 160
-        y: 144
-        z: 1
+        x: 0
+        y: 0
+        z: 10
       )
       .rightControls(self.playerSpeed)
+      .bind "KeyDown", (event) ->
+        if event.key == Crafty.keys['SPACE']
+          self.conn.sendMessage({ type: "place_bomb" })
+
+    self.conn.sendMessage type: "load_map"
+
+  processServerMessage: (event) =>
+    # console.log "processServerMessage"
+    # console.log event
+    # console.log this
+
+    console.log "message received:"
+    console.log event.data
+
+    messages = JSON.parse event.data
+
+    for message in messages
+      # console.log message
+
+      if message.type == "position" && message.object_type == "block"
+        @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, box, solid").attr
+          x: message.coordinates[0] * @spriteSize
+          y: message.coordinates[1] * @spriteSize
+
+      else if message.type == "position" && message.object_type == "explosion"
+        @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, explosion").attr
+          x: message.coordinates[0] * @spriteSize
+          y: message.coordinates[1] * @spriteSize
+
+      else if message.type == "position" && message.object_type == "bomb"
+        @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, bomb").attr
+          x: message.coordinates[0] * @spriteSize
+          y: message.coordinates[1] * @spriteSize
+
+      else if message.type == "position" && message.object_type == "player"
+        @player.attr
+          x: message.coordinates[0] * @spriteSize
+          y: message.coordinates[1] * @spriteSize
+
+      else if message.type == "delete"
+        console.log "delete entity: " + message.id
+
+        @gameObjects[(String) message.id].destroy()
+
+      else if message.type == "my_player_id"
+        @myPlayerId = message.player_id
+
 
 window.onload = ->
   game = new Game
