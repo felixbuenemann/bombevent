@@ -37,4 +37,8 @@ module GameObject
   def solid?
     true
   end
+
+  def destroyable?
+    true
+  end
 end

@@ -38,14 +38,20 @@ class Game
     @channel.push(event)
   end
 
-  # if object at 3,3 I can't got to 2,3 but not 2.1,3
-  def solid_object_at?(x, y)
-    game_objects.any? do |game_object|
-      game_object.solid? &&
-        x > (game_object.coordinates[0] - 1) &&
+  def objects_at(x, y)
+    game_objects.select do |game_object|
+      x > (game_object.coordinates[0] - 1) &&
         x < (game_object.coordinates[0] + 1) &&
         y > (game_object.coordinates[1] - 1) &&
         y < (game_object.coordinates[1] + 1)
     end
+  end
+
+  def solid_object_at?(x, y)
+    objects_at(x, y).any?(&:solid?)
+  end
+
+  def destroyable_objects_at(x, y)
+    objects_at(x, y).select(&:destroyable?)
   end
 end
