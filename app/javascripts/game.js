@@ -21,7 +21,7 @@ window.onload = function() {
     });
 
     this.sendMessage = (function(msg) {
-      msg = new Array(msg);
+      msg = JSON.stringify(new Array(msg));
       console.log(msg);
       ws.send(msg);
     });
