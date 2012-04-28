@@ -33,4 +33,8 @@ module GameObject
     delete_from_game
     send_delete
   end
+
+  def solid?
+    true
+  end
 end

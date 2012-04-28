@@ -35,9 +35,10 @@ class Game
   end
 
   # if object at 3,3 I can't got to 2,3 but not 2.1,3
-  def object_at?(x, y)
+  def solid_object_at?(x, y)
     game_objects.any? do |game_object|
-      x > (game_object.coordinates[0] - 1) &&
+      game_object.solid? &&
+        x > (game_object.coordinates[0] - 1) &&
         x < (game_object.coordinates[0] + 1) &&
         y > (game_object.coordinates[1] - 1) &&
         y < (game_object.coordinates[1] + 1)

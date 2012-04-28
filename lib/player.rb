@@ -28,13 +28,17 @@ class Player
   def valid_coordinates?(x, y)
     (0..game.map_size[0]).include?(x) &&
       (0..game.map_size[1]).include?(y) &&
-      !game.object_at?(x,y)
+      !game.solid_object_at?(x,y)
   end
 
   def place_bomb
     bomb = Bomb.new(game, round_coordinates)
     bomb.add_to_game
     bomb.send_position
+  end
+
+  def solid?
+    false
   end
 end
 
