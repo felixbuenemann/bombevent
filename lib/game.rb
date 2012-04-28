@@ -6,7 +6,7 @@ class Game
   def initialize(map_size = [15,11])
     @channel  = EventMachine::Channel.new
     @players  = Array.new
-    @map_size = size
+    @map_size = map_size
   end
 
   def subscribe(&block)
