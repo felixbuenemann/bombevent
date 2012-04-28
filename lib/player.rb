@@ -6,19 +6,19 @@ class Player
 
   def initialize(game)
     @game = game
-    @coordinates = [0, 0]
+    @coordinates = [0.0, 0.0]
   end
 
   def move(direction)
     case direction.to_sym
     when :up
-      coordinates[1] -= 1
+      coordinates[1] -= 0.2
     when :down
-      coordinates[1] += 1
+      coordinates[1] += 0.2
     when :left
-      coordinates[0] -= 1
+      coordinates[0] -= 0.2
     when :right
-      coordinates[0] += 1
+      coordinates[0] += 0.2
     end
     send_position
   end
