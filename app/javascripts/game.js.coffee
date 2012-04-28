@@ -105,43 +105,6 @@ class Game
             x: i * @spriteSize
             y: j * @spriteSize
 
-        if i > 0 && i < (@canvasCols-2) && j > 0 && j < (@canvasRows-2) && Crafty.math.randomInt(0, 50) > 49
-          (Crafty.e "2D, DOM, flower, solid, SpriteAnimation")
-            .attr(
-              x: i * @spriteSize
-              y: j * @spriteSize
-            )
-            .animate("wind", 0, 1, 3)
-            .bind "EnterFrame", ->
-              unless @isPlaying()
-                @animate "wind", 80
-
-      # create the bushes along the x-axis which will form the boundaries
-      (Crafty.e "2D, Canvas, wall_top, solid, bush#{Crafty.math.randomInt 1, 2}")
-        .attr
-          x: i * @spriteSize
-          y: 0
-          z: 2
-      (Crafty.e "2D, DOM, wall_bottom, solid, bush#{Crafty.math.randomInt 1, 2}")
-        .attr
-          x: i * @spriteSize
-          y: @canvasSizeY - @spriteSize
-          z: 2
-
-    # create the bushes along the y-axis
-    # we need to start one more and one less to not overlap the previous bushes
-    for i in [1..@canvasRows-2]
-      (Crafty.e "2D, DOM, wall_left, solid, bush#{Crafty.math.randomInt 1, 2}")
-        .attr
-          x: 0
-          y: i * @spriteSize
-          z: 2
-      (Crafty.e "2D, Canvas, wall_right, solid, bush#{Crafty.math.randomInt 1, 2}")
-        .attr
-          x: @canvasSizeX - @spriteSize
-          y: i * @spriteSize
-          z: 2
-
   buildHero: ->
     self = @
     Crafty.c 'Hero',
