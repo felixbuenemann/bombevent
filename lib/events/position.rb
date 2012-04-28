@@ -7,7 +7,7 @@ module Events
     end
 
     def as_json(*)
-      super.merge(id: @object.id, coordinates: @object.coordinates)
+      super.merge(id: @object.id, coordinates: @object.coordinates, object_type: @object.object_type)
     end
   end
 end
