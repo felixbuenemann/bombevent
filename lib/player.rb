@@ -20,7 +20,7 @@ class Player
     when :right
       new_coordinates[0] += 0.2
     end
-    coordinates = new_coordinates if valid_coordinates(*new_coordinates)
+    coordinates = new_coordinates if valid_coordinates?(*new_coordinates)
     send_position
   end
 
