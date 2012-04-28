@@ -22,6 +22,10 @@ class Game
     @channel.subscribe(&block)
   end
 
+  def unsubscribe(name)
+    @channel.unsubscribe(name)
+  end
+
   def add_object(object)
     @game_objects << object
   end

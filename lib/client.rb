@@ -13,8 +13,9 @@ class Client
     @player.add_to_game
     send_event Events::MyPlayerId.new(@player)
     @player.send_position
-    @game.subscribe { |event| send_event(event) }
+    @subscription_name = @game.subscribe { |event| send_event(event) }
     websocket.onmessage { |msg| process_message(msg) }
+    websocket.onclose { close }
   end
 
   def process_message(msg)
@@ -40,5 +41,11 @@ class Client
   def send_event(event)
     debug("Send event: #{Array(event).to_json}")
     @websocket.send(Array(event).to_json)
+  end
+
+  def close
+    info("Player left")
+    @player.delete
+    @game.unsubscribe(@subscription_name)
   end
 end
