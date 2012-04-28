@@ -1,6 +1,8 @@
 require 'em/channel'
 
 class Game
+  attr_reader :players
+
   def initialize
     @channel = EventMachine::Channel.new
     @players = Array.new

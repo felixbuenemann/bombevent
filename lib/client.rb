@@ -24,10 +24,15 @@ class Client
       @player.move(event.direction)
     when Events::Delete
       # TODO
+    when Events::Loadmap
+      events = @game.players.map do |player|
+        Events::Position.new player
+      end
+      send_events(events)
     end
   end
 
   def send_event(event)
-    @websocket.send(event.to_json)
+    @websocket.send(Array(event).to_json)
   end
 end
