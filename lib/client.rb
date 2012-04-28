@@ -1,6 +1,7 @@
 require 'logging'
 require 'player'
 require 'game'
+require 'events'
 
 class Client
   include Logging
