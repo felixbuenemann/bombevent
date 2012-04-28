@@ -29,7 +29,7 @@ class Client
       @player.move(event.direction)
     when Events::Delete
       # TODO
-    when Events::Loadmap
+    when Events::LoadMap
       events = @game.game_objects.map do |object|
         Events::Position.new object
       end

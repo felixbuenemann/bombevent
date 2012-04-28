@@ -1,4 +1,4 @@
 module Events
-  class Loadmap < Base
+  class LoadMap < Base
   end
 end
