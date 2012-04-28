@@ -45,7 +45,7 @@ class Client
 
   def close
     info("Player left")
-    @player.delete
     @game.unsubscribe(@subscription_name)
+    @player.delete
   end
 end
