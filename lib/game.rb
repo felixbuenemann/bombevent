@@ -1,5 +1,6 @@
 require 'em/channel'
 require 'block'
+require 'wall'
 
 class Game
   attr_reader :map_size
@@ -23,7 +24,11 @@ class Game
           @spawn_coordinates.include? coords
         end
 
-        @game_objects << Block.new(self, [x, y]) if rand < 0.6
+        case rand
+          when 0..0.1 then @game_objects << Wall.new(self, [x, y])
+          when 0..0.6 then @game_objects << Block.new(self, [x, y])
+        end
+
       end
     end
   end
