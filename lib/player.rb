@@ -10,17 +10,23 @@ class Player
   end
 
   def move(direction)
+    new_coordinates = coordinates.dup
     case direction.to_sym
     when :up
-      coordinates[1] -= 0.2
+      new_coordinates[1] -= 0.2
     when :down
-      coordinates[1] += 0.2
+      new_coordinates[1] += 0.2
     when :left
-      coordinates[0] -= 0.2
+      new_coordinates[0] -= 0.2
     when :right
-      coordinates[0] += 0.2
+      new_coordinates[0] += 0.2
     end
+    coordinates = new_coordinates if valid_coordinates(*new_coordinates)
     send_position
+  end
+
+  def valid_coordinates?(x, y)
+    true # FIXME
   end
 end
 
