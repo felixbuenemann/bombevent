@@ -17,8 +17,14 @@ class Game
   end
 
   def init_map
-    [[2, 2], [2, 3], [2, 4], [3, 3], [3, 5]].each do |coordinate|
-      @game_objects << Block.new(self, coordinate)
+    15.times do |x|
+      11.times do |y|
+        next if [[x,y], [x+1,y], [x-1,y], [x,y+1], [x,y-1] ].any? do |coords|
+          @spawn_coordinates.include? coords
+        end
+
+        @game_objects << Block.new(self, [x, y]) if rand < 0.6
+      end
     end
   end
 
