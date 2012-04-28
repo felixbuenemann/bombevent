@@ -239,10 +239,16 @@ class Game
         # assign own player id to user on first movement =)
         if message.id == @myPlayerId
           @players[(String) message.id] = @player
-        else if typeof @players[(String) message.id] is undefined
-          @player = (Crafty.e "2D, DOM, player")
+          anyplayer = @player
 
-        @player.attr
+        # create other players when they move
+        if @players[(String) message.id] is undefined
+          anyplayer = (Crafty.e "2D, DOM, player")
+          @players[(String) message.id] = anyplayer
+        else
+          anyplayer = @players[(String) message.id]
+
+        anyplayer.attr
           x: message.coordinates[0] * @spriteSize
           y: message.coordinates[1] * @spriteSize
 
@@ -251,7 +257,8 @@ class Game
         console.log "delete player: " + message.id
         console.log @players
 
-        @players[(String) message.id].destroy()
+        # unless @players[(String) message.id] is undefined
+        @players[(String) message.id]?.destroy()
 
       # some entity should be removed
       else if message.type == "delete"
