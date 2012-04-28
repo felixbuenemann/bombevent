@@ -33,7 +33,7 @@ class Client
       events = @game.game_objects.map do |object|
         Events::Position.new object
       end
-      send_events(events)
+      send_event(events)
     end
   end
 
