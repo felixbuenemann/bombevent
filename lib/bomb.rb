@@ -11,6 +11,7 @@ class Bomb
     self.game = game
     self.coordinates = coordinates
     EventMachine::add_timer(3) { explode }
+    @explode_callbacks = Array.new
   end
 
   def explode
@@ -21,6 +22,11 @@ class Bomb
     [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]].each do |xn, yn|
       add_explosion_at(xn, yn) unless game.non_destroyable_object_at?(xn, yn)
     end
+    @explode_callbacks.each { |cb| cb.call(self) }
+  end
+
+  def on_explode(&block)
+    @explode_callbacks << block
   end
 
   def add_explosion_at(x, y)

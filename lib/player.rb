@@ -5,10 +5,15 @@ class Player
   include GameObject
 
   SPEED = 0.2
+  INITIAL_MAX_BOMBS = 3
+
+  attr_accessible :max_bombs
 
   def initialize(game)
     self.game = game
     self.coordinates = game.next_spawn_position
+    @bombs = Array.new
+    @max_bombs = INITIAL_MAX_BOMBS
   end
 
   def move(direction)
@@ -34,9 +39,12 @@ class Player
   end
 
   def place_bomb
+    return if @bombs.count >= @max_bombs
     bomb = Bomb.new(game, round_coordinates)
+    @bombs << bomb
     bomb.add_to_game
     bomb.send_position
+    bomb.on_explode { |bomb| @bombs.delete(bomb) }
   end
 
   def solid?
