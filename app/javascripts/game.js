@@ -1,7 +1,6 @@
 window.onload = function() {
   function Connection() {
     var serverUri = "ws://" + document.location.host.replace(/:3000/, ':3004') + '/';
-    serverUri = "ws://localhost:3004/";
 
     this.onOpen = (function(event) {
     });
@@ -45,7 +44,7 @@ window.onload = function() {
 	Crafty.canvas.init();
 	
 	//turn the sprite map into usable components
-	Crafty.sprite(spriteSize, "images/sprite2x.png", {
+	Crafty.sprite(spriteSize, "images/sprite.png", {
 		grass1: [0,0],
 		grass2: [1,0],
 		grass3: [2,0],
