@@ -54,4 +54,8 @@ class Game
   def destroyable_objects_at(x, y)
     objects_at(x, y).select(&:destroyable?)
   end
+
+  def non_destroyable_object_at?(x, y)
+    objects_at(x, y).any? { |object| !object.destroyable? }
+  end
 end
