@@ -11,6 +11,7 @@ class Client
     @game, @websocket = game, websocket
     @player = Player.new(game)
     @game.add_player(@player)
+    @game.subscribe { |event| send_event(event) }
     websocket.onmessage { |msg| process_message(msg) }
   end
 
@@ -23,5 +24,9 @@ class Client
     when Events::Delete
       # TODO
     end
+  end
+
+  def send_event(event)
+    @websocket.send(event.to_json)
   end
 end
