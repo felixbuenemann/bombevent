@@ -7,7 +7,7 @@ class Player
   SPEED = 0.2
   INITIAL_MAX_BOMBS = 3
 
-  attr_accessible :max_bombs
+  attr_accessor :max_bombs
 
   def initialize(game)
     self.game = game
