@@ -19,7 +19,7 @@ class Player
       coordinates[0] -= 1
     end
 
-    @game.send(Events::Move.new())
+    @game.send(Events::Position.new())
   end
 end
 
