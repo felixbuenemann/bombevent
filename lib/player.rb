@@ -24,7 +24,7 @@ class Player
   end
 
   def send_position
-    @game.send(Events::Position.new(self, coordinates))
+    @game.send(Events::Position.new(self))
   end
 end
 
