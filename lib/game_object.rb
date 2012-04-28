@@ -16,4 +16,8 @@ module GameObject
   def send_delete
     game.send(Events::Delete.new(self))
   end
+
+  def round_coordinates
+    coordinates.map(&:round)
+  end
 end

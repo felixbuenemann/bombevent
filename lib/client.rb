@@ -27,8 +27,8 @@ class Client
     case event
     when Events::Move
       @player.move(event.direction)
-    when Events::Delete
-      # TODO
+    when Events::PlaceBomb
+      @player.place_bomb
     when Events::LoadMap
       events = @game.game_objects.map do |object|
         Events::Position.new object

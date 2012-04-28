@@ -1,4 +1,5 @@
 require 'game_object'
+require 'bomb'
 
 class Player
   include GameObject
@@ -27,6 +28,12 @@ class Player
   def valid_coordinates?(x, y)
     (0..game.map_size[0]).include?(x) &&
       (0..game.map_size[1]).include?(y)
+  end
+
+  def place_bomb
+    bomb = Bomb.new(game, round_coordinates)
+    game.add_bomb(bomb)
+    bomb.send_position
   end
 end
 

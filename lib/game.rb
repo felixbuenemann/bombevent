@@ -27,6 +27,10 @@ class Game
     @players << player
   end
 
+  def add_bomb(bomb)
+    @bombs << bomb
+  end
+
   def send(event)
     @channel.push(event)
   end
