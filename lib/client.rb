@@ -24,7 +24,7 @@ class Client
   end
 
   def process_event(event)
-    debug(event.class)
+    debug("Send event: #{event.inspect}")
     case event
     when Events::Move
       @player.move(event.direction)
