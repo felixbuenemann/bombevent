@@ -3,9 +3,10 @@ require 'em/channel'
 class Game
   attr_reader :players
 
-  def initialize
-    @channel = EventMachine::Channel.new
-    @players = Array.new
+  def initialize(map_size = [15,11])
+    @channel  = EventMachine::Channel.new
+    @players  = Array.new
+    @map_size = size
   end
 
   def subscribe(&block)
