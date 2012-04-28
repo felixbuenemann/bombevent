@@ -9,6 +9,10 @@ class Game
     @channel  = EventMachine::Channel.new
     @game_objects  = Array.new
     @map_size = map_size
+    @spawn_coordinates = [
+      [0,0], [0, 10], [14, 10], [14, 0]
+    ]
+    @spawn_index = 0
     init_map
   end
 
@@ -16,6 +20,11 @@ class Game
     [[2, 2], [2, 3], [2, 4], [3, 3], [3, 5]].each do |coordinate|
       @game_objects << Block.new(self, coordinate)
     end
+  end
+
+  def next_spawn_position
+    @spawn_index = (@spawn_index + 1) % @spawn_coordinates.size
+    @spawn_coordinates[@spawn_index]
   end
 
   def subscribe(&block)

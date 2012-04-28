@@ -6,7 +6,7 @@ class Player
 
   def initialize(game)
     self.game = game
-    self.coordinates = [0.0, 0.0]
+    self.coordinates = game.next_spawn_position
   end
 
   def move(direction)
