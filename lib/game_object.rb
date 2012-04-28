@@ -12,4 +12,8 @@ module GameObject
   def send_position
     game.send(Events::Position.new(self))
   end
+
+  def send_delete
+    game.send(Events::Delete.new(self))
+  end
 end
