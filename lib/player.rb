@@ -5,8 +5,8 @@ class Player
   include GameObject
 
   def initialize(game)
-    @game = game
-    @coordinates = [0.0, 0.0]
+    self.game = game
+    self.coordinates = [0.0, 0.0]
   end
 
   def move(direction)
@@ -21,10 +21,6 @@ class Player
       coordinates[0] += 0.2
     end
     send_position
-  end
-
-  def send_position
-    @game.send(Events::Position.new(self))
   end
 end
 
