@@ -34,6 +34,7 @@ class Client
   end
 
   def send_event(event)
+    debug("Send message: #{Array(event).to_json}")
     @websocket.send(Array(event).to_json)
   end
 end

@@ -2,6 +2,7 @@ require 'logger'
 
 module Logging
   @@logger = Logger.new(STDOUT)
+  @@logger.level = Logger::DEBUG
 
   def log(serverity, msg)
     @@logger.log(serverity, msg)
