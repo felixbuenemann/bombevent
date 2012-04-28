@@ -4,9 +4,13 @@ module Events
       @player = player
     end
 
+    def json_type
+      'my_player_id'
+    end
+
     def as_json(*)
       super.merge(
-        my_player_id: @player.id,
+        player_id: @player.id,
       )
     end
   end

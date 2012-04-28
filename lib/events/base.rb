@@ -4,8 +4,12 @@ module Events
   class Base
     def as_json(*)
       {
-        type: self.class.name.downcase.gsub('events::',''),
+        type: json_type
       }
+    end
+
+    def json_type
+      self.class.name.downcase.gsub('events::',''),
     end
 
     def to_json(*)
