@@ -40,6 +40,7 @@ class Game
     @canvasSizeX = @spriteSize * @canvasCols
     @canvasSizeY = @spriteSize * @canvasRows
     @gameObjects = {}
+    @players = {}
     @myPlayerId = null
 
     # connect server
@@ -96,6 +97,7 @@ class Game
       self.buildWorld()
       self.buildHero()
       self.buildControls()
+      self.loadMap()
       self.buildPlayer()
 
     # draw scene
@@ -187,7 +189,8 @@ class Game
         if event.key == Crafty.keys['SPACE']
           self.conn.sendMessage({ type: "place_bomb" })
 
-    self.conn.sendMessage type: "load_map"
+  loadMap: ->
+    @conn.sendMessage type: "load_map"
 
   processServerMessage: (event) =>
     # console.log "processServerMessage"
@@ -202,16 +205,25 @@ class Game
     for message in messages
       # console.log message
 
+      # place a block (destroyable)
       if message.type == "position" && message.object_type == "block"
         @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, box, solid").attr
           x: message.coordinates[0] * @spriteSize
           y: message.coordinates[1] * @spriteSize
 
+      # place a wall (undestroyable)
+      else if message.type == "position" && message.object_type == "wall"
+        @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, wall, solid").attr
+          x: message.coordinates[0] * @spriteSize
+          y: message.coordinates[1] * @spriteSize
+
+      # a bomb exploded
       else if message.type == "position" && message.object_type == "explosion"
         @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, explosion").attr
           x: message.coordinates[0] * @spriteSize
           y: message.coordinates[1] * @spriteSize
 
+      # a bomb has been placed
       else if message.type == "position" && message.object_type == "bomb"
         @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, bomb, SpriteAnimation").attr(
             x: message.coordinates[0] * @spriteSize
@@ -222,19 +234,33 @@ class Game
             unless @isPlaying()
               @animate("pulsate", 60)
 
+      # any player has moved
       else if message.type == "position" && message.object_type == "player"
         @player.attr
           x: message.coordinates[0] * @spriteSize
           y: message.coordinates[1] * @spriteSize
 
+        # assign own player id to user on first movement =)
+        if message.id == @myPlayerId
+          @players[(String) message.id] = @player
+
+      # someone dies
+      else if message.type == "delete" && message.object_type == "player"
+        console.log "delete player: " + message.id
+        console.log @players
+
+        @players[(String) message.id].destroy()
+
+      # some entity should be removed
       else if message.type == "delete"
         console.log "delete entity: " + message.id
 
         @gameObjects[(String) message.id].destroy()
 
+      # assign own player id
       else if message.type == "my_player_id"
         @myPlayerId = message.player_id
-
+        # console.log "got player id: " + @myPlayerId
 
 window.onload = ->
   game = new Game
