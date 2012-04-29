@@ -283,9 +283,15 @@ class Game
           y: message.coordinates[1] * @spriteSize
 
       when "explosion" # a bomb exploded
-        @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, explosion").attr
-          x: message.coordinates[0] * @spriteSize
-          y: message.coordinates[1] * @spriteSize
+        @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, explosion, SpriteAnimation")
+          .animate("explode", 0, 2, 1)
+          .bind("EnterFrame", ->
+            unless @isPlaying()
+              @animate("explode", 10, -1)
+          ).attr(
+            x: message.coordinates[0] * @spriteSize
+            y: message.coordinates[1] * @spriteSize
+          )
 
       when "bomb" # a bomb has been placed
         @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, bomb, SpriteAnimation").attr(
