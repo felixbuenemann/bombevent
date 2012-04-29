@@ -10,12 +10,17 @@ class Game
 
   def initialize(map_size = [15,11])
     @channel  = EventMachine::Channel.new
-    @game_objects  = Array.new
     @map_size = map_size
+    init
+  end
+
+  def init
+    @game_objects  = Array.new
     @spawn_coordinates = [
       [0,0], [0, 10], [14, 10], [14, 0]
     ]
     @spawn_index = 0
+    @running = true
     init_map
   end
 
@@ -30,7 +35,7 @@ class Game
         when 0...0.1
           @game_objects << Wall.new(self, [x, y])
         when 0.1...0.6
-          block = Block.new(self, [x, y])
+          block = Block.new(self, [x, y]).send_position.add_to_game
           block.on_delete do |block|
             case rand
             when 0...0.1
@@ -41,9 +46,16 @@ class Game
               RadiusUp.new(self, block.coordinates).send_position.add_to_game
             end
           end
-          @game_objects << block
         end
       end
+    end
+  end
+
+  def reset
+    send(Events::GameEnd.new) if @running
+    EventMachine::add_timer(5) do
+      send(Events::Reset.new)
+      init
     end
   end
 
@@ -66,6 +78,8 @@ class Game
 
   def delete_object(object)
     @game_objects.delete(object)
+
+    reset if object.kind_of?(Player) && all_players.count <= 1
   end
 
   def send(event)
@@ -79,6 +93,10 @@ class Game
         y > (game_object.coordinates[1] - 1) &&
         y < (game_object.coordinates[1] + 1)
     end
+  end
+
+  def all_players
+    @game_objects.select { |o| o.kind_of?(Player) }
   end
 
   def players_at(x, y)
