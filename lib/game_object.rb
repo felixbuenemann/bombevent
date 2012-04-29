@@ -1,6 +1,15 @@
 module GameObject
   attr_accessor :coordinates, :game
 
+  def initialize(game, coordinates)
+    @game, @coordinates = game, coordinates
+    @delete_callbacks = Array.new
+  end
+
+  def on_delete(&block)
+    @delete_callbacks << block
+  end
+
   def id
     self.object_id
   end
@@ -32,6 +41,7 @@ module GameObject
   def delete
     delete_from_game
     send_delete
+    @delete_callbacks.each { |cb| cb.call(self) } if @delete_callbacks
   end
 
   def solid?

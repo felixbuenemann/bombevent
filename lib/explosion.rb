@@ -5,8 +5,7 @@ class Explosion
   include GameObject
 
   def initialize(game, coordinates, seconds = 1)
-    self.game = game
-    self.coordinates = coordinates
+    super(game, coordinates)
     EventMachine::add_timer(seconds) { delete }
 
     @subscription_name = game.subscribe { destroy_objects }

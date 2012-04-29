@@ -10,8 +10,7 @@ class Player
   attr_accessor :max_bombs
 
   def initialize(game)
-    self.game = game
-    self.coordinates = game.next_spawn_position
+    super(game, game.next_spawn_position)
     @bombs = Array.new
     @max_bombs = INITIAL_MAX_BOMBS
     @dead = false

@@ -8,8 +8,7 @@ class Bomb
   include Logging
 
   def initialize(game, coordinates, explosions_size = 3)
-    self.game = game
-    self.coordinates = coordinates
+    super(game, coordinates)
     @explosions_size = explosions_size
     EventMachine::add_timer(3) { explode }
     @explode_callbacks = Array.new
