@@ -57,6 +57,10 @@ class Game
       bomb:   [0,1]
       explosion: [0,2]
       player: [0,3]
+      player2: [0,4]
+      player3: [0,5]
+      player4: [0,6]
+      player5: [0,7]
       wall: [9,2]
       metal: [10,2]
       box: [11,2]
@@ -250,7 +254,7 @@ class Game
 
         # create other players when they move
         if @players[(String) message.id] is undefined
-          anyplayer = (Crafty.e "2D, DOM, player")
+          anyplayer = (Crafty.e "2D, DOM, player2")
           @players[(String) message.id] = anyplayer
         else
           anyplayer = @players[(String) message.id]
