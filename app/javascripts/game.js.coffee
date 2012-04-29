@@ -150,10 +150,10 @@ class Game
       init: ->
         # setup animations
         @requires("SpriteAnimation, Collision")
-          .animate("walk_left", 6, 3, 8)
-          .animate("walk_right", 9, 3, 11)
-          .animate("walk_up", 3, 3, 5)
-          .animate("walk_down", 0, 3, 2)
+          .animate("walk_left", 6, 2 + self.player_number, 8)
+          .animate("walk_right", 9, 2 + self.player_number, 11)
+          .animate("walk_up", 3, 2 + self.player_number, 5)
+          .animate("walk_down", 0, 2 + self.player_number, 2)
           # change direction when a direction change event is received
           .bind("NewDirection", (direction) ->
               if direction.x < 0
@@ -200,10 +200,10 @@ class Game
       init: ->
         # setup animations
         @requires("SpriteAnimation, Collision")
-          .animate("walk_left", 6, 3 + self.player_number, 8)
-          .animate("walk_right", 9, 3 + self.player_number, 11)
-          .animate("walk_up", 3, 3 + self.player_number, 5)
-          .animate("walk_down", 0, 3 + self.player_number, 2)
+          .animate("walk_left", 6, 2 + self.player_number, 8)
+          .animate("walk_right", 9, 2 + self.player_number, 11)
+          .animate("walk_up", 3, 2 + self.player_number, 5)
+          .animate("walk_down", 0, 2 + self.player_number, 2)
           this
 
   buildControls: ->
