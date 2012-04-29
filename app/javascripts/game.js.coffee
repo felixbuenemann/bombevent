@@ -299,11 +299,12 @@ class Game
 
       when "player" # any player has moved
         # assign own player id to user on first movement =)
-        if message.id == @myPlayerId
-          @player or= @buildPlayer()
+        if not @player && message.id == @myPlayerId
+          # @player or= @buildPlayer()
+          @player = @buildPlayer()
           @players[(String) message.id] = @player
           anyplayer = @player
-          @log "got my own player :D"
+          @log "hero assigned"
 
         # create other players when they move
         if @players[(String) message.id] is undefined
