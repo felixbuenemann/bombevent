@@ -5,7 +5,7 @@ class Player
   include GameObject
 
   SPEED = 0.25
-  INITIAL_MAX_BOMBS = 3
+  INITIAL_MAX_BOMBS = 1
 
   attr_accessor :max_bombs
 
