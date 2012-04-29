@@ -304,12 +304,14 @@ class Game
           ).attr(
             x: message.coordinates[0] * @spriteSize
             y: message.coordinates[1] * @spriteSize
+            z: 50
           )
 
       when "bomb" # a bomb has been placed
         @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, bomb, SpriteAnimation").attr(
             x: message.coordinates[0] * @spriteSize
             y: message.coordinates[1] * @spriteSize
+            z: 30
           )
           .animate("pulsate", 0, 1, 2)
           .bind "EnterFrame", ->
