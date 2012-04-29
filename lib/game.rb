@@ -34,11 +34,11 @@ class Game
           block.on_delete do |block|
             case rand
             when 0...0.1
-              Bomb.new(self, block.coordinates).send_position
+              Bomb.new(self, block.coordinates).send_position.add_to_game
             when 0.1...0.3
-              BombUp.new(self, block.coordinates).send_position
+              BombUp.new(self, block.coordinates).send_position.add_to_game
             when 0.3...0.5
-              RadiusUp.new(self, block.coordinates).send_position
+              RadiusUp.new(self, block.coordinates).send_position.add_to_game
             end
           end
           @game_objects << block

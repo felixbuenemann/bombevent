@@ -58,4 +58,8 @@ class Bomb
   def solid?
     true
   end
+
+  def destroyable?
+    false
+  end
 end

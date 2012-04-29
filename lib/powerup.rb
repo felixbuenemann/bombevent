@@ -28,4 +28,8 @@ class Powerup
   def destroyable?
     false
   end
+
+  def solid?
+    false
+  end
 end
