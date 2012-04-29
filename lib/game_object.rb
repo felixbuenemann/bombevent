@@ -1,5 +1,5 @@
 module GameObject
-  attr_accessor :coordinates, :game
+  attr_accessor :coordinates, :game, :direction
 
   def initialize(game, coordinates)
     @game, @coordinates = game, coordinates

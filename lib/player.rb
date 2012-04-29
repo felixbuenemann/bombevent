@@ -24,6 +24,7 @@ class Player
 
   def move(direction)
     return if @dead
+    self.direction = direction
     new_coordinates = coordinates.dup
     case direction.to_sym
     when :up
