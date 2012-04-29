@@ -366,6 +366,10 @@ class Game
 
   processResetMessage: (message) ->
     console.log "received reset, destroy all objects"
+    # delete players
+    for key, player in @players
+      player.destroy()
+    # delete objects
     for key, gameObject in @gameObjects
       gameObject.destroy()
     @resetPlayer()
