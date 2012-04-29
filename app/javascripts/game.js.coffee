@@ -56,7 +56,9 @@ class Game
       floor4: [3,0]
       floor5: [4,0]
       floor6: [5,0]
-      bomb:   [0,1]
+      bomb: [0,1]
+      bombup: [3,1]
+      radiusup: [4,1]
       explosion: [0,2]
       player: [0,3]
       player2: [0,4]
@@ -229,6 +231,18 @@ class Game
       # place a block (destroyable)
       if message.type == "position" && message.object_type == "block"
         @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, box, solid").attr
+          x: message.coordinates[0] * @spriteSize
+          y: message.coordinates[1] * @spriteSize
+
+      # powerup: radius+1
+      else if message.type == "position" && message.object_type == "radiusup"
+        @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, radiusup, solid").attr
+          x: message.coordinates[0] * @spriteSize
+          y: message.coordinates[1] * @spriteSize
+
+      # powerup: bombs+1
+      else if message.type == "position" && message.object_type == "bombup"
+        @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, bombup, solid").attr
           x: message.coordinates[0] * @spriteSize
           y: message.coordinates[1] * @spriteSize
 
