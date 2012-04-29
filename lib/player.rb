@@ -10,6 +10,8 @@ class Player
   attr_accessor :max_bombs, :explosion_size, :points
   attr_reader :nickname
 
+  @@player_counter = 0
+
   def initialize(game, nickname)
     super(game, game.next_spawn_position)
     @bombs = Array.new
@@ -18,6 +20,8 @@ class Player
     @explosion_size = 1
     @nickname = nickname
     @points = 0
+    @@player_counter += 1
+    self.player_number = @@player_counter
   end
 
   def delete

@@ -12,6 +12,7 @@ module Events
         coordinates: @object.coordinates,
         object_type: @object.object_type,
         direction:   @object.direction,
+        player_number: @object.player_number
       )
     end
   end
