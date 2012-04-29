@@ -48,9 +48,12 @@ class Player
   end
 
   def valid_coordinates?(x, y)
-    (0..game.map_size[0] - 1).include?(x) &&
-      (0..game.map_size[1] - 1).include?(y) &&
-      !game.solid_object_at?(x,y)
+    return false unless (0..game.map_size[0] - 1).include?(x) && (0..game.map_size[1] - 1).include?(y)
+    if game.solid_object_at?(x,y)
+      return game.solid_objects_at(*coordinates) == game.solid_objects_at(x, y)
+    end
+
+    true
   end
 
   def calculate_alaternative_coordinates(old_coords, new_coords, direction)

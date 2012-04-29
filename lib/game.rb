@@ -71,6 +71,10 @@ class Game
     objects_at(x, y).any?(&:solid?)
   end
 
+  def solid_objects_at(x, y)
+    objects_at(x, y).select(&:solid?)
+  end
+
   def destroyable_objects_at(x, y)
     objects_at(x, y).select(&:destroyable?)
   end

@@ -57,6 +57,6 @@ class Bomb
   end
 
   def solid?
-    false
+    true
   end
 end
