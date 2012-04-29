@@ -89,17 +89,17 @@ class Player
     bomb = Bomb.new(game, round_coordinates, @explosion_size) do |object|
       if object.kind_of? Player
         object == self ? object.points -= 1 : object.points += 1
-        game.send Events::Score.new(
-          nickname:  nickname,
-          player_id: id,
-          score:     points,
-        )
       end
     end
     @bombs << bomb
     bomb.add_to_game
     bomb.send_position
     bomb.on_explode { |bomb| @bombs.delete(bomb) }
+  end
+
+  def points=(points)
+    @points = points
+    game.send(Events::Score.new(nickname: nickname, player_id: id, score: @points))
   end
 
   def solid?
