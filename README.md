@@ -1,7 +1,7 @@
 BombEvent
 =========
 
-HTML5/Websockets/Eventmachine Bomberman (MIT license)
+HTML5/Websockets/Eventmachine Bomberman (MIT License)
 
 This is an Bomberman clone consisting of a server written with EventMachine and em-websockets and a client written in CoffeeScript and utilizing the [Crafty](http://craftyjs.com) game engine for drawing and controls.
 
