@@ -54,6 +54,8 @@ class Game
       floor2: [1,0]
       floor3: [2,0]
       floor4: [3,0]
+      floor5: [4,0]
+      floor6: [5,0]
       bomb:   [0,1]
       explosion: [0,2]
       player: [0,3]
@@ -82,15 +84,14 @@ class Game
 
       # black background with some loading text
       Crafty.background "#000"
-      (Crafty.e "2D, DOM, Text")
+      (Crafty.e "2D, DOM, Image")
         .attr(
-          w: 100
-          h: 20
-          x: (self.canvasSizeX/2) - (100/2)
-          y: (self.canvasSizeY/2) - (20/2)
+          w: 604
+          h: 352
+          x: (self.canvasSizeX/2) - (604/2)
+          y: (self.canvasSizeY/2) - (352/2)
         )
-        .text("Bomb 'em all - Loading...")
-        .css("text-align": "center")
+        .image("images/loading.png");
 
     # automatically play the loading scene
     Crafty.scene("loading")
@@ -117,8 +118,8 @@ class Game
     for i in [0..@canvasCols-1]
       # generate the grass along the y-axis
       for j in [0..@canvasRows-1]
-        grassType = Crafty.math.randomInt 1, 4
-        (Crafty.e "2D, Canvas, floor#{grassType}")
+        floorType = Crafty.math.randomInt 1, 6
+        (Crafty.e "2D, Canvas, floor#{floorType}")
           .attr
             x: i * @spriteSize
             y: j * @spriteSize
