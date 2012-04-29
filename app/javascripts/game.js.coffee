@@ -86,7 +86,7 @@ class Game
   connectServer: ->
     @conn = new Connection
       onOpen: @joinGame
-      onMessage: @processServerMessage
+      onMessage: @dispatchServerMessage
 
   joinGame: =>
     console.log "joining game"
@@ -222,8 +222,8 @@ class Game
     console.log "requesting map"
     @conn.sendMessage type: "load_map"
 
-  processServerMessage: (event) =>
-    # console.log "processServerMessage"
+  dispatchServerMessage: (event) =>
+    # console.log "dispatchServerMessage"
     # console.log event
     # console.log this
 
@@ -235,48 +235,52 @@ class Game
     for message in messages
       # console.log message
 
-      # assign own player id
-      if message.type == "my_player_id"
-        @myPlayerId = message.player_id
-        console.log "got player id: #{@myPlayerId}"
-        @loadMap()
-
       # ignore all messages while
       # waiting for player id
-      continue unless @myPlayerId
+      unless @myPlayerId or message.type is "my_player_id"
+        console.log "no player id yet, ignore #{message.type} message"
+        continue
 
-      # place a block (destroyable)
-      if message.type == "position" && message.object_type == "block"
+      switch message.type
+        when "my_player_id" then @initMyPlayerId         message
+        when "position"     then @processPositionMessage message
+        when "delete"       then @processDeleteMessage   message
+
+  initMyPlayerId: (message) ->
+    # assign own player id
+    @myPlayerId = message.player_id
+    console.log "got player id: #{@myPlayerId}"
+    # ready to request map
+    @loadMap()
+
+  processPositionMessage: (message) ->
+    switch message.object_type
+      when "block" # place a block (destroyable)
         @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, box, solid").attr
           x: message.coordinates[0] * @spriteSize
           y: message.coordinates[1] * @spriteSize
 
-      # powerup: radius+1
-      else if message.type == "position" && message.object_type == "radiusup"
+      when "radiusup" # powerup: radius+1
         @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, radiusup, solid").attr
           x: message.coordinates[0] * @spriteSize
           y: message.coordinates[1] * @spriteSize
 
-      # powerup: bombs+1
-      else if message.type == "position" && message.object_type == "bombup"
+      when "bombup" # powerup: bombs+1
         @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, bombup, solid").attr
           x: message.coordinates[0] * @spriteSize
           y: message.coordinates[1] * @spriteSize
 
-      # place a wall (undestroyable)
-      else if message.type == "position" && message.object_type == "wall"
+      when "wall" # place a wall (undestroyable)
         @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, wall, solid").attr
           x: message.coordinates[0] * @spriteSize
           y: message.coordinates[1] * @spriteSize
 
-      # a bomb exploded
-      else if message.type == "position" && message.object_type == "explosion"
+      when "explosion" # a bomb exploded
         @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, explosion").attr
           x: message.coordinates[0] * @spriteSize
           y: message.coordinates[1] * @spriteSize
 
-      # a bomb has been placed
-      else if message.type == "position" && message.object_type == "bomb"
+      when "bomb" # a bomb has been placed
         @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, bomb, SpriteAnimation").attr(
             x: message.coordinates[0] * @spriteSize
             y: message.coordinates[1] * @spriteSize
@@ -286,8 +290,7 @@ class Game
             unless @isPlaying()
               @animate("pulsate", 60)
 
-      # any player has moved
-      else if message.type == "position" && message.object_type == "player"
+      when "player" # any player has moved
         # assign own player id to user on first movement =)
         if message.id == @myPlayerId
           @player or= @buildPlayer()
@@ -305,19 +308,16 @@ class Game
           x: message.coordinates[0] * @spriteSize
           y: message.coordinates[1] * @spriteSize
 
-      # someone dies
-      else if message.type == "delete" && message.object_type == "player"
+  processDeleteMessage: (message) ->
+    switch message.object_type
+      when "player" # someone dies
         console.log "delete player: " + message.id
         console.log @players
-
-        # unless @players[(String) message.id] is undefined
         @players[(String) message.id]?.destroy()
 
-      # some entity should be removed
-      else if message.type == "delete"
+      else # some entity should be removed
         console.log "delete entity: " + message.id
-
-        @gameObjects[(String) message.id].destroy()
+        @gameObjects[(String) message.id]?.destroy()
 
 window.onload = ->
   game = new Game
