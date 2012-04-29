@@ -25,10 +25,15 @@ class Game
         end
 
         case rand
-          when 0..0.1 then @game_objects << Wall.new(self, [x, y])
-          when 0..0.6 then @game_objects << Block.new(self, [x, y])
+        when 0..0.1
+          @game_objects << Wall.new(self, [x, y])
+        when 0.1..0.6
+          block = Block.new(self, [x, y])
+          block.on_delete do |block|
+            Bomb.new(self, block.coordinates).send_position if rand < 0.2
+          end
+          @game_objects << block
         end
-
       end
     end
   end
