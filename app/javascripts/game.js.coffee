@@ -255,16 +255,17 @@ class Game
     for message in messages
       # console.log message
 
-      # ignore all messages while
-      # waiting for player id
-      unless @myPlayerId or message.type is "my_player_id"
-        console.log "no player id yet, ignore #{message.type} message"
-        continue
-
-      switch message.type
-        when "my_player_id" then @initMyPlayerId         message
-        when "position"     then @processPositionMessage message
-        when "delete"       then @processDeleteMessage   message
+      unless @myPlayerId # waiting for player id
+        switch message.type
+          when "my_player_id" then @initMyPlayerId         message
+          when "reset"        then @processResetMessage    message
+          #else console.log "no player id yet, ignore #{message.type} message"
+      else
+        switch message.type
+          when "position"     then @processPositionMessage message
+          when "delete"       then @processDeleteMessage   message
+          when "reset"        then @processResetMessage    message
+          else console.log "unknown message type #{message.type}"
 
   initMyPlayerId: (message) ->
     # assign own player id
@@ -359,6 +360,16 @@ class Game
       else # some entity should be removed
         console.log "delete entity: " + message.id
         @gameObjects[(String) message.id]?.destroy()
+
+  processResetMessage: (message) ->
+    console.log "received reset, destroy all objects"
+    for gameObject in @gameObjects
+      gameObject.destroy()
+    @resetPlayer()
+
+  resetPlayer: ->
+    @myPlayerId = null
+    @joinGame()
 
 window.onload = ->
   game = new Game
