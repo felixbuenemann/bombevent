@@ -146,7 +146,9 @@ class Game
             maxY = self.canvasSizeY - self.spriteSize
             validX = @_x < 0 || @_x > maxX
             validY = @_y < 0 || @_y > maxY
-            if @hit('solid') || validX || validY
+            #hits = @hit('solid')
+            #console.log hits
+            if false #hits || validX || validY
               @attr
                 x: from.x
                 y: from.y
@@ -197,8 +199,8 @@ class Game
     # console.log event
     # console.log this
 
-    console.log "message received:"
-    console.log event.data
+    #console.log "message received:"
+    #console.log event.data
 
     messages = JSON.parse event.data
 
