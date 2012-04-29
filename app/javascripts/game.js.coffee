@@ -264,7 +264,7 @@ class Game
             x: message.coordinates[0] * @spriteSize
             y: message.coordinates[1] * @spriteSize
           )
-          .animate("pulsate", 0, 1, 3)
+          .animate("pulsate", 0, 1, 2)
           .bind "EnterFrame", ->
             unless @isPlaying()
               @animate("pulsate", 60)
