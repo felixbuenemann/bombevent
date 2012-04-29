@@ -91,7 +91,7 @@ class Game
           x: (self.canvasSizeX/2) - (604/2)
           y: (self.canvasSizeY/2) - (352/2)
         )
-        .image("images/loading.png");
+        .image "images/loading.png"
 
     # automatically play the loading scene
     Crafty.scene("loading")
