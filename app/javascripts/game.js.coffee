@@ -42,10 +42,7 @@ class Game
     @gameObjects = {}
     @players = {}
     @myPlayerId = null
-
-    # connect server
-    @conn = new Connection
-      onMessage: @processServerMessage
+    @conn = null
 
     # start crafty
     Crafty.init @canvasSizeX, @canvasSizeY
@@ -66,6 +63,11 @@ class Game
 
   start: ->
     @preloader()
+
+  connectServer: ->
+    @conn = new Connection
+      onOpen: @loadMap
+      onMessage: @processServerMessage
 
   # the loading screen that will display while our assets load
   preloader: ->
@@ -97,11 +99,12 @@ class Game
       self.buildWorld()
       self.buildHero()
       self.buildControls()
-      self.loadMap()
-      self.buildPlayer()
+      #self.loadMap()
+      #self.buildPlayer()
 
     # draw scene
     Crafty.scene("main")
+    @connectServer()
 
   # method to randomly generate the map
   buildWorld: ->
@@ -191,7 +194,8 @@ class Game
         if event.key == Crafty.keys['SPACE']
           self.conn.sendMessage({ type: "place_bomb" })
 
-  loadMap: ->
+  loadMap: (event) =>
+    console.log "connection open, requesting map"
     @conn.sendMessage type: "load_map"
 
   processServerMessage: (event) =>
@@ -240,6 +244,7 @@ class Game
       else if message.type == "position" && message.object_type == "player"
         # assign own player id to user on first movement =)
         if message.id == @myPlayerId
+          @player or= @buildPlayer()
           @players[(String) message.id] = @player
           anyplayer = @player
 
