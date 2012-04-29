@@ -90,7 +90,7 @@ class Game
           x: (self.canvasSizeX/2) - (100/2)
           y: (self.canvasSizeY/2) - (20/2)
         )
-        .text("Loading")
+        .text("Bomb 'em all - Loading...")
         .css("text-align": "center")
 
     # automatically play the loading scene
