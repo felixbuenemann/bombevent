@@ -27,8 +27,8 @@ class Connection
 
   sendMessage: (message) ->
     message = JSON.stringify [message]
-    console.log "sent message:"
-    console.log message
+    #console.log "sent message:"
+    #console.log message
     @socket.send message
 
 class Game
@@ -70,7 +70,6 @@ class Game
 
   connectServer: ->
     @conn = new Connection
-      onOpen: @loadMap
       onMessage: @processServerMessage
 
   # the loading screen that will display while our assets load
@@ -103,6 +102,7 @@ class Game
       self.buildWorld()
       self.buildHero()
       self.buildControls()
+      # trigger these in callbacks:
       #self.loadMap()
       #self.buildPlayer()
 
@@ -198,8 +198,8 @@ class Game
         if event.key == Crafty.keys['SPACE']
           self.conn.sendMessage({ type: "place_bomb" })
 
-  loadMap: (event) =>
-    console.log "connection open, requesting map"
+  loadMap: ->
+    console.log "requesting map"
     @conn.sendMessage type: "load_map"
 
   processServerMessage: (event) =>
@@ -214,6 +214,16 @@ class Game
 
     for message in messages
       # console.log message
+
+      # assign own player id
+      if message.type == "my_player_id"
+        @myPlayerId = message.player_id
+        console.log "got player id: #{@myPlayerId}"
+        @loadMap()
+
+      # ignore all messages while
+      # waiting for player id
+      continue unless @myPlayerId
 
       # place a block (destroyable)
       if message.type == "position" && message.object_type == "block"
@@ -276,11 +286,6 @@ class Game
         console.log "delete entity: " + message.id
 
         @gameObjects[(String) message.id].destroy()
-
-      # assign own player id
-      else if message.type == "my_player_id"
-        @myPlayerId = message.player_id
-        # console.log "got player id: " + @myPlayerId
 
 window.onload = ->
   game = new Game
