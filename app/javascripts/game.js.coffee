@@ -71,7 +71,7 @@ class Game
       bombup: [3,1]
       radiusup: [4,1]
       explosion: [0,2]
-      player: [0,3]
+      player1: [0,3]
       player2: [0,4]
       player3: [0,5]
       player4: [0,6]
@@ -200,10 +200,10 @@ class Game
       init: ->
         # setup animations
         @requires("SpriteAnimation, Collision")
-          .animate("walk_left", 6, 4, 8)
-          .animate("walk_right", 9, 4, 11)
-          .animate("walk_up", 3, 4, 5)
-          .animate("walk_down", 0, 4, 2)
+          .animate("walk_left", 6, 3 + self.player_number, 8)
+          .animate("walk_right", 9, 3 + self.player_number, 11)
+          .animate("walk_up", 3, 3 + self.player_number, 5)
+          .animate("walk_down", 0, 3 + self.player_number, 2)
           this
 
   buildControls: ->
@@ -217,10 +217,11 @@ class Game
         @fourway speed
         this
 
-  buildPlayer: ->
+  buildPlayer: (player_number) ->
     self = @
+    num = player_number % 5
     # create our player entity with some premade components
-    @player = (Crafty.e "2D, Canvas, player, RightControls, Hero, Animate, Collision, KeyBoard")
+    @player = (Crafty.e "2D, Canvas, player#{num}, RightControls, Hero, Animate, Collision, KeyBoard")
       .attr(
         x: 0
         y: 0
@@ -230,6 +231,7 @@ class Game
       .bind "KeyDown", (event) ->
         if event.key == Crafty.keys['SPACE']
           self.conn.sendMessage({ type: "place_bomb" })
+    @player.attr("player_number", num)
 
   loadMap: ->
     console.log "requesting map"
@@ -318,14 +320,16 @@ class Game
         # assign own player id to user on first movement =)
         if not @player && message.id == @myPlayerId
           # @player or= @buildPlayer()
-          @player = @buildPlayer()
+          @player = @buildPlayer(message.player_number)
           @players[(String) message.id] = @player
           anyplayer = @player
           @log "hero assigned"
 
         # create other players when they move
         if @players[(String) message.id] is undefined
-          anyplayer = (Crafty.e "2D, Canvas, player2, OtherHero, Animate, Collision")
+          num = message.player_number % 5
+          anyplayer = (Crafty.e "2D, Canvas, player#{num}, OtherHero, Animate, Collision")
+          anyplayer.attr("player_number", num);
           @players[(String) message.id] = anyplayer
           @log "player joined: " + message.id
         else
