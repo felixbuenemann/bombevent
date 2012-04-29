@@ -121,6 +121,7 @@ class Game
       console.log "generating world"
       self.buildWorld()
       self.buildHero()
+      self.buildOtherHero()
       self.buildControls()
       # trigger these in callbacks:
       #self.loadMap()
@@ -191,6 +192,18 @@ class Game
                 type: "move"
                 direction: dir
           )
+          this
+
+  buildOtherHero: ->
+    self = @
+    Crafty.c 'OtherHero',
+      init: ->
+        # setup animations
+        @requires("SpriteAnimation, Collision")
+          .animate("walk_left", 6, 4, 8)
+          .animate("walk_right", 9, 4, 11)
+          .animate("walk_up", 3, 4, 5)
+          .animate("walk_down", 0, 4, 2)
           this
 
   buildControls: ->
@@ -314,11 +327,22 @@ class Game
 
         # create other players when they move
         if @players[(String) message.id] is undefined
-          anyplayer = (Crafty.e "2D, DOM, player2")
+          anyplayer = (Crafty.e "2D, Canvas, player2, OtherHero, Animate, Collision")
           @players[(String) message.id] = anyplayer
           @log "player joined: " + message.id
         else
           anyplayer = @players[(String) message.id]
+
+          if message.id != @myPlayerId
+            if message.direction == "left"
+              anyplayer.stop().animate("walk_left", 10, 0) unless anyplayer.isPlaying("walk_left")
+            else if message.direction == "right"
+              anyplayer.stop().animate("walk_right", 10, 0) unless anyplayer.isPlaying("walk_right")
+            else if message.direction == "up"
+              anyplayer.stop().animate("walk_up", 10, 0) unless anyplayer.isPlaying("walk_up")
+            else if message.direction == "down"
+              anyplayer.stop().animate("walk_down", 10, 0) unless anyplayer.isPlaying("walk_down")
+            # anyplayer.stop()
 
         anyplayer.attr
           x: message.coordinates[0] * @spriteSize
