@@ -1,6 +1,7 @@
 require 'em/channel'
 require 'block'
 require 'wall'
+require 'powerup/bomb_up'
 
 class Game
   attr_reader :map_size
@@ -25,12 +26,17 @@ class Game
         end
 
         case rand
-        when 0..0.1
+        when 0...0.1
           @game_objects << Wall.new(self, [x, y])
-        when 0.1..0.6
+        when 0.1...0.6
           block = Block.new(self, [x, y])
           block.on_delete do |block|
-            Bomb.new(self, block.coordinates).send_position if rand < 0.2
+            case rand
+            when 0...0.1
+              Bomb.new(self, block.coordinates).send_position
+            when 0.1...0.5
+              BombUp.new(self, block.coordinates).send_position
+            end
           end
           @game_objects << block
         end
@@ -70,6 +76,10 @@ class Game
         y > (game_object.coordinates[1] - 1) &&
         y < (game_object.coordinates[1] + 1)
     end
+  end
+
+  def players_at(x, y)
+    objects_at(x, y).select { |o| o.kind_of?(Player) }
   end
 
   def solid_object_at?(x, y)
