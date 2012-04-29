@@ -235,15 +235,12 @@ class Game
     console.log "requesting map"
     @conn.sendMessage type: "load_map"
 
-  dispatchServerMessage: (event) =>
-    # console.log "dispatchServerMessage"
-
   log: (msg) ->
     sidebar = document.getElementById("sidebar")
     sidebar.innerHTML = "<li>" + msg + "</li>" + sidebar.innerHTML
 
-  processServerMessage: (event) =>
-    # console.log "processServerMessage"
+  dispatchServerMessage: (event) =>
+    # console.log "dispatchServerMessage"
     # console.log event
     # console.log this
 
