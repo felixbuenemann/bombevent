@@ -12,6 +12,7 @@ class Connection
 
   onOpen: (event) =>
     console.log "connection opened"
+    @socket.send(JSON.stringify [type: "join"])
 
   onClose: (event) =>
     console.log "connection closed"
