@@ -36,7 +36,14 @@ class Player
     when :right
       new_coordinates[0] = (new_coordinates[0] + SPEED).round(2)
     end
-    self.coordinates = new_coordinates if valid_coordinates?(*new_coordinates)
+    if valid_coordinates?(*new_coordinates)
+      self.coordinates = new_coordinates
+    else
+      self.coordinates = calculate_alaternative_coordinates(
+        coordinates,
+        new_coordinates,
+        direction.to_sym)
+    end
     send_position
   end
 
@@ -44,6 +51,27 @@ class Player
     (0..game.map_size[0] - 1).include?(x) &&
       (0..game.map_size[1] - 1).include?(y) &&
       !game.solid_object_at?(x,y)
+  end
+
+  def calculate_alaternative_coordinates(old_coords, new_coords, direction)
+    horizontal = [ :left, :right ]
+    vertical   = [ :up,   :down  ]
+    if horizontal.include? direction
+      new_coords[1] = (new_coords[1] + SPEED).round(2)
+      unless valid_coordinates? *new_coords
+        new_coords[1] = (new_coords[1] - 2 * SPEED).round(2)
+        return old_coords unless valid_coordinates? *new_coords
+      end
+    elsif vertical.include? direction
+      new_coords[0] = (new_coords[0] + SPEED).round(2)
+      unless valid_coordinates? *new_coords
+        new_coords[0] = (new_coords[0] - 2 *SPEED).round(2)
+        return old_coords unless valid_coordinates? *new_coords
+      end
+    else
+      return old_coords
+    end
+    return new_coords
   end
 
   def place_bomb
