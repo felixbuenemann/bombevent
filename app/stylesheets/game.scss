@@ -1,0 +1,22 @@
+body {
+  background: #000;
+  color: #efefef;
+  overflow: hidden;
+  font-family: sans-serif;
+  font-size: 14px;
+}
+
+#cr-stage {
+  border: 2px solid black;
+  margin:5px auto;
+  color: white;
+}
+
+#sidebar {
+  float: right;
+  width: 200px;
+
+  list-style: none;
+  font-size: 12px;
+  margin: 0;
+}

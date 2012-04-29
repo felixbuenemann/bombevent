@@ -224,11 +224,18 @@ class Game
 
   dispatchServerMessage: (event) =>
     # console.log "dispatchServerMessage"
+
+  log: (msg) ->
+    sidebar = document.getElementById("sidebar")
+    sidebar.innerHTML = "<li>" + msg + "</li>" + sidebar.innerHTML
+
+  processServerMessage: (event) =>
+    # console.log "processServerMessage"
     # console.log event
     # console.log this
 
-    #console.log "message received:"
-    #console.log event.data
+    # console.log "message received:"
+    # console.log event.data
 
     messages = JSON.parse event.data
 
@@ -296,11 +303,13 @@ class Game
           @player or= @buildPlayer()
           @players[(String) message.id] = @player
           anyplayer = @player
+          @log "got my own player :D"
 
         # create other players when they move
         if @players[(String) message.id] is undefined
           anyplayer = (Crafty.e "2D, DOM, player2")
           @players[(String) message.id] = anyplayer
+          @log "player joined: " + message.id
         else
           anyplayer = @players[(String) message.id]
 
@@ -314,6 +323,7 @@ class Game
         console.log "delete player: " + message.id
         console.log @players
         @players[(String) message.id]?.destroy()
+        @log message.id + " died"
 
       else # some entity should be removed
         console.log "delete entity: " + message.id
