@@ -86,7 +86,7 @@ class Game
   def delete_object(object)
     @game_objects.delete(object)
 
-    reset if object.kind_of?(Player) && all_players.count <= 1
+    #reset if object.kind_of?(Player) && all_players.count <= 1
   end
 
   def send(event)
