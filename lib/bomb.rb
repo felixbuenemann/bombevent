@@ -10,7 +10,7 @@ class Bomb
   def initialize(game, coordinates, explosions_size = 3)
     super(game, coordinates)
     @explosions_size = explosions_size
-    EventMachine::add_timer(3) { explode }
+    game.add_timer(3) { explode }
     @explode_callbacks = Array.new
   end
 

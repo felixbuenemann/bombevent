@@ -21,6 +21,7 @@ class Game
     ]
     @spawn_index = 0
     @running = true
+    @timers = Array.new
     init_map
   end
 
@@ -51,8 +52,13 @@ class Game
     end
   end
 
+  def add_timer(seconds, &block)
+    @timers << EventMachine::Timer.new(seconds, &block)
+  end
+
   def reset
     send(Events::GameEnd.new) if @running
+    @timers.each { |timer| timer.cancel }
     @running = false
     EventMachine::add_timer(5) do
       send(Events::Reset.new)
