@@ -42,6 +42,12 @@ class Client
     when Events::LoadMap
       events = @game.game_objects.map do |object|
         Events::Position.new object
+      end + @game.all_players.map do |player|
+        Events::Score.new(
+          nickname:  player.nickname,
+          player_id: player.id,
+          score:     player.points,
+        )
       end
       send_event(events)
     end
