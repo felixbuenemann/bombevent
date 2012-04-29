@@ -16,7 +16,6 @@ class Connection
 
   onOpen: (event) =>
     console.log "connection opened"
-    @socket.send(JSON.stringify [type: "join"])
 
   onClose: (event) =>
     console.log "connection closed"
@@ -86,7 +85,13 @@ class Game
 
   connectServer: ->
     @conn = new Connection
+      onOpen: @joinGame
       onMessage: @processServerMessage
+
+  joinGame: =>
+    console.log "joining game"
+    @conn.sendMessage
+      type: "join"
 
   # the loading screen that will display while our assets load
   preloader: ->
