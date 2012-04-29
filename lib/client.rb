@@ -14,11 +14,15 @@ class Client
     websocket.onclose { close }
   end
 
-  def join
-    @player = Player.new(@game)
-    @player.add_to_game
-    send_event Events::MyPlayerId.new(@player)
-    @player.send_position
+  def join(nickname = "")
+    if @game.running?
+      @player = Player.new(@game, nickname)
+      @player.add_to_game
+      send_event Events::MyPlayerId.new(@player)
+      @player.send_position
+    else
+      send_event Events::GameEnd.new
+    end
   end
 
   def process_message(msg)
@@ -30,7 +34,7 @@ class Client
   def process_event(event)
     case event
     when Events::Join
-      join
+      join(event.nickname)
     when Events::Move
       @player.move(event.direction)
     when Events::PlaceBomb

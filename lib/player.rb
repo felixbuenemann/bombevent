@@ -8,13 +8,15 @@ class Player
   INITIAL_MAX_BOMBS = 1
 
   attr_accessor :max_bombs, :explosion_size
+  attr_reader :nickname
 
-  def initialize(game)
+  def initialize(game, nickname)
     super(game, game.next_spawn_position)
     @bombs = Array.new
     @max_bombs = INITIAL_MAX_BOMBS
     @dead = false
     @explosion_size = 1
+    @nickname = nickname
   end
 
   def delete

@@ -53,6 +53,7 @@ class Game
 
   def reset
     send(Events::GameEnd.new) if @running
+    @running = false
     EventMachine::add_timer(5) do
       send(Events::Reset.new)
       init
@@ -121,5 +122,9 @@ class Game
 
   def non_destroyable_object_at?(x, y)
     objects_at(x, y).any? { |object| !object.destroyable? }
+  end
+
+  def running?
+    @running
   end
 end
