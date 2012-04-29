@@ -7,11 +7,12 @@ class Bomb
   include GameObject
   include Logging
 
-  def initialize(game, coordinates, explosions_size = 3)
+  def initialize(game, coordinates, explosions_size = 3, &block)
     super(game, coordinates)
     @explosions_size = explosions_size
     game.add_timer(3) { explode }
     @explode_callbacks = Array.new
+    @after_explosion_callback = block if block_given?
   end
 
   def explode
@@ -47,9 +48,8 @@ class Bomb
       false
     else
       old_destroyable = game.destroyable_objects_at? x, y
-      explosion = Explosion.new(game, [x, y])
-      explosion.add_to_game
-      explosion.send_position
+      explosion = Explosion.new(game, [x, y], 1, @after_explosion_callback)
+      explosion.add_to_game.send_position
       # return value indicates if explosion can go through
       !old_destroyable
     end

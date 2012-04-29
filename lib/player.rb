@@ -7,7 +7,7 @@ class Player
   SPEED = 0.25
   INITIAL_MAX_BOMBS = 1
 
-  attr_accessor :max_bombs, :explosion_size
+  attr_accessor :max_bombs, :explosion_size, :points
   attr_reader :nickname
 
   def initialize(game, nickname)
@@ -17,6 +17,7 @@ class Player
     @dead = false
     @explosion_size = 1
     @nickname = nickname
+    @points = 0
   end
 
   def delete
@@ -81,7 +82,11 @@ class Player
 
   def place_bomb
     return if @dead || @bombs.count >= @max_bombs
-    bomb = Bomb.new(game, round_coordinates, @explosion_size)
+    bomb = Bomb.new(game, round_coordinates, @explosion_size) do |object|
+      if object.kind_of? Player
+        object == self ? object.points -= 1 : object.points += 1
+      end
+    end
     @bombs << bomb
     bomb.add_to_game
     bomb.send_position
