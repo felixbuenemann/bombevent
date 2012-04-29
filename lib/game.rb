@@ -2,6 +2,7 @@ require 'em/channel'
 require 'block'
 require 'wall'
 require 'powerup/bomb_up'
+require 'powerup/radius_up'
 
 class Game
   attr_reader :map_size
@@ -34,8 +35,10 @@ class Game
             case rand
             when 0...0.1
               Bomb.new(self, block.coordinates).send_position
-            when 0.1...0.5
+            when 0.1...0.3
               BombUp.new(self, block.coordinates).send_position
+            when 0.3...0.5
+              RadiusUp.new(self, block.coordinates).send_position
             end
           end
           @game_objects << block

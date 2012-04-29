@@ -7,14 +7,14 @@ class Player
   SPEED = 0.25
   INITIAL_MAX_BOMBS = 1
 
-  attr_accessor :max_bombs
+  attr_accessor :max_bombs, :explosion_size
 
   def initialize(game)
     super(game, game.next_spawn_position)
     @bombs = Array.new
     @max_bombs = INITIAL_MAX_BOMBS
     @dead = false
-    @explosion_size = 3
+    @explosion_size = 1
   end
 
   def delete
