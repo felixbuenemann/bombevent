@@ -120,8 +120,9 @@ class Game
     Crafty.scene "main", ->
       console.log "generating world"
       self.buildWorld()
-      self.buildHero()
-      self.buildOtherHero()
+      for player_number in [1..5]
+        self.buildHero(player_number)
+        self.buildOtherHero(player_number)
       self.buildControls()
       # trigger these in callbacks:
       #self.loadMap()
@@ -144,16 +145,16 @@ class Game
             x: i * @spriteSize
             y: j * @spriteSize
 
-  buildHero: ->
+  buildHero: (player_number) ->
     self = @
-    Crafty.c 'Hero',
+    Crafty.c "Hero#{player_number}",
       init: ->
         # setup animations
         @requires("SpriteAnimation, Collision")
-          .animate("walk_left", 6, 2 + self.player_number, 8)
-          .animate("walk_right", 9, 2 + self.player_number, 11)
-          .animate("walk_up", 3, 2 + self.player_number, 5)
-          .animate("walk_down", 0, 2 + self.player_number, 2)
+          .animate("walk_left",  6, 2 + player_number, 8)
+          .animate("walk_right", 9, 2 + player_number, 11)
+          .animate("walk_up",    3, 2 + player_number, 5)
+          .animate("walk_down",  0, 2 + player_number, 2)
           # change direction when a direction change event is received
           .bind("NewDirection", (direction) ->
               if direction.x < 0
@@ -194,17 +195,17 @@ class Game
           )
           this
 
-  buildOtherHero: ->
+  buildOtherHero: (player_number) ->
     self = @
-    Crafty.c 'OtherHero',
+    Crafty.c "OtherHero#{player_number}",
       init: ->
         # setup animations
         @requires("SpriteAnimation, Collision")
-          .animate("walk_left", 6, 2 + self.player_number, 8)
-          .animate("walk_right", 9, 2 + self.player_number, 11)
-          .animate("walk_up", 3, 2 + self.player_number, 5)
-          .animate("walk_down", 0, 2 + self.player_number, 2)
-          this
+          .animate("walk_left",  6, 2 + player_number, 8)
+          .animate("walk_right", 9, 2 + player_number, 11)
+          .animate("walk_up",    3, 2 + player_number, 5)
+          .animate("walk_down",  0, 2 + player_number, 2)
+        this
 
   buildControls: ->
     self = @
@@ -221,7 +222,7 @@ class Game
     self = @
     num = player_number % 5
     # create our player entity with some premade components
-    @player = (Crafty.e "2D, Canvas, player#{num}, RightControls, Hero, Animate, Collision, KeyBoard")
+    @player = (Crafty.e "2D, Canvas, player#{num}, RightControls, Hero#{num}, Animate, Collision, KeyBoard")
       .attr(
         x: 0
         y: 0
@@ -321,17 +322,16 @@ class Game
       when "player" # any player has moved
         # assign own player id to user on first movement =)
         if not @player && message.id == @myPlayerId
-          # @player or= @buildPlayer()
-          @player = @buildPlayer(message.player_number)
+          @player = @buildPlayer Crafty.math.randomInt(1, 5) # unimplemented: message.player_number
           @players[(String) message.id] = @player
           anyplayer = @player
           @log "hero assigned"
 
         # create other players when they move
         if @players[(String) message.id] is undefined
-          num = message.player_number % 5
-          anyplayer = (Crafty.e "2D, Canvas, player#{num}, OtherHero, Animate, Collision")
-          anyplayer.attr("player_number", num);
+          num = 2 # unimplemented: message.player_number % 5
+          anyplayer = (Crafty.e "2D, Canvas, player#{num}, OtherHero#{num}, Animate, Collision")
+          anyplayer.attr("player_number", num)
           @players[(String) message.id] = anyplayer
           @log "player joined: " + message.id
         else
