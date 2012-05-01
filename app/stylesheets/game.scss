@@ -8,15 +8,19 @@ body {
 
 #cr-stage {
   border: 2px solid black;
-  margin:5px auto;
+  margin: 5px auto;
   color: white;
 }
 
 #sidebar {
-  float: right;
-  width: 200px;
-
+  width: 720px;
+  height: 5em;
   list-style: none;
   font-size: 12px;
-  margin: 0;
+  margin: 5px auto;
+  padding: 0;
+  overflow: auto;
+}
+#sidebar li {
+  line-height: 1em
 }

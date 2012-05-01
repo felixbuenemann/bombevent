@@ -10,6 +10,7 @@ class Game
     @players = {}
     @myPlayerId = null
     @conn = null
+    @sidebar = document.getElementById("sidebar")
 
     # start crafty
     Crafty.init @canvasSizeX, @canvasSizeY
@@ -195,8 +196,11 @@ class Game
     @conn.sendMessage type: "load_map"
 
   log: (msg) ->
-    sidebar = document.getElementById("sidebar")
-    sidebar.innerHTML = "<li>" + msg + "</li>" + sidebar.innerHTML
+    listItem = document.createElement "li"
+    listItem.innerHTML = msg
+    @sidebar.appendChild listItem
+    # scroll to bottom of list
+    @sidebar.scrollTop = @sidebar.scrollHeight
 
   dispatchServerMessage: (event) =>
     # console.log "dispatchServerMessage"
