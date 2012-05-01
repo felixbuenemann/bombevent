@@ -9,6 +9,9 @@ require "eventmachine"
 require "em-websocket"
 require 'thin'
 require 'sprockets'
+require 'haml'
+require 'coffee_script'
+require 'sass'
 
 require './app/bomb_app'
 require 'game'
