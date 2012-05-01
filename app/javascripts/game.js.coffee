@@ -1,3 +1,5 @@
+#= require connection
+#= require logger
 class Game
   constructor: ->
     @spriteSize = 48
@@ -10,7 +12,7 @@ class Game
     @players = {}
     @myPlayerId = null
     @conn = null
-    @sidebar = document.getElementById("sidebar")
+    @logger = new Logger document.getElementById("sidebar")
 
     # start crafty
     Crafty.init @canvasSizeX, @canvasSizeY
@@ -195,13 +197,6 @@ class Game
     console.log "requesting map"
     @conn.sendMessage type: "load_map"
 
-  log: (msg) ->
-    listItem = document.createElement "li"
-    listItem.innerHTML = msg
-    @sidebar.appendChild listItem
-    # scroll to bottom of list
-    @sidebar.scrollTop = @sidebar.scrollHeight
-
   dispatchServerMessage: (event) =>
     # console.log "dispatchServerMessage"
     # console.log event
@@ -287,7 +282,7 @@ class Game
           @player = @buildPlayer Crafty.math.randomInt(1, 5) # unimplemented: message.player_number
           @players[(String) message.id] = @player
           anyplayer = @player
-          @log "hero assigned"
+          @logger.info "hero assigned"
 
         # create other players when they move
         if @players[(String) message.id] is undefined
@@ -295,7 +290,7 @@ class Game
           anyplayer = (Crafty.e "2D, Canvas, player#{num}, OtherHero#{num}, Animate, Collision")
           anyplayer.attr("player_number", num)
           @players[(String) message.id] = anyplayer
-          @log "player joined: " + message.id
+          @logger.info "player joined: " + message.id
         else
           anyplayer = @players[(String) message.id]
 
@@ -320,7 +315,7 @@ class Game
         console.log "delete player: " + message.id
         console.log @players
         @players[(String) message.id]?.destroy()
-        @log message.id + " died"
+        @logger.info message.id + " died"
 
       else # some entity should be removed
         console.log "delete entity: " + message.id

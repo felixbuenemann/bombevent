@@ -1,4 +1,3 @@
-#= require connection
 #= require game
 # initialize game
 window.onload = ->
