@@ -46,7 +46,7 @@ class Player
     if valid_coordinates?(*new_coordinates)
       self.coordinates = new_coordinates
     else
-      self.coordinates = calculate_alaternative_coordinates(
+      self.coordinates = calculate_alternative_coordinates(
         coordinates,
         new_coordinates,
         direction.to_sym)
@@ -63,7 +63,7 @@ class Player
     true
   end
 
-  def calculate_alaternative_coordinates(old_coords, new_coords, direction)
+  def calculate_alternative_coordinates(old_coords, new_coords, direction)
     horizontal = [ :left, :right ]
     vertical   = [ :up,   :down  ]
     if horizontal.include? direction
@@ -81,7 +81,7 @@ class Player
     else
       return old_coords
     end
-    return new_coords
+    new_coords
   end
 
   def place_bomb
