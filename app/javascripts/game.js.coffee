@@ -265,7 +265,9 @@ class Game
           when "position"     then @processPositionMessage message
           when "delete"       then @processDeleteMessage   message
           when "reset"        then @processResetMessage    message
-          else console.log "unknown message type #{message.type}"
+          else
+            console.log "unknown message type #{message.type}"
+            console.log message
 
   initMyPlayerId: (message) ->
     # assign own player id
