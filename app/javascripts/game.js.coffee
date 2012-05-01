@@ -323,12 +323,12 @@ class Game
         @gameObjects[(String) message.id]?.destroy()
 
   processResetMessage: (message) ->
-    console.log "received reset, destroy all objects"
+    console.log "received reset, destroying all players and objects"
     # delete players
-    for key, player in @players
+    for id, player of @players
       player.destroy()
     # delete objects
-    for key, gameObject in @gameObjects
+    for id, gameObject of @gameObjects
       gameObject.destroy()
     @resetPlayer()
 
