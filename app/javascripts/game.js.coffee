@@ -220,6 +220,7 @@ class Game
           when "position"     then @processPositionMessage message
           when "delete"       then @processDeleteMessage   message
           when "reset"        then @processResetMessage    message
+          when "score"        then @processScoreMessage    message
           else
             console.log "unknown message type #{message.type}"
             console.log message
@@ -330,6 +331,9 @@ class Game
     for key, gameObject in @gameObjects
       gameObject.destroy()
     @resetPlayer()
+
+  processScoreMessage: (message) ->
+    @logger.info "#{message.player_id} #{message.nickname} score: #{message.score}"
 
   resetPlayer: ->
     @myPlayerId = null
