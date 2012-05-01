@@ -16,6 +16,7 @@ class Logger
     @el.appendChild listItem
     # scroll to bottom of list
     @el.scrollTop = @el.scrollHeight
+    @
 
   info: (message) ->
     @print INFO, message
