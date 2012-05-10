@@ -1,5 +1,6 @@
 require 'eventmachine'
 require 'game_object'
+require 'events/position'
 
 class Explosion
   include GameObject
@@ -8,7 +9,7 @@ class Explosion
     super(game, coordinates)
     game.add_timer(seconds) { delete }
     @on_destroy_objects_callback = callback
-    @subscription_name = game.subscribe { destroy_objects }
+    @subscription_name = game.subscribe { |event| destroy_objects if event.kind_of?(Events::Position) }
 
     destroy_objects
   end
