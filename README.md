@@ -9,7 +9,7 @@ It was initially developed in two days at the [ADVANCE HACKATHON 2012](http://ha
 
 We'll continue maturing the code and adding more fun features and hopefully some specs soon.
 
-To get it running:
+To get it working (you need to be running ruby 1.9.2 or later):
 
 * Clone the project
 * Run bundle install
