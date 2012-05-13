@@ -32,7 +32,7 @@ class Player
   end
 
   def move(direction)
-    return if @dead
+    return if @dead || direction.nil?
     self.direction = direction
     new_coordinates = coordinates.dup
     case direction.to_sym
