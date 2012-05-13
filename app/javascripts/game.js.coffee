@@ -336,6 +336,7 @@ class Game
     @logger.info "#{message.player_id} #{message.nickname} score: #{message.score}"
 
   resetPlayer: ->
+    @player = null
     @myPlayerId = null
     @joinGame()
 
