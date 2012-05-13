@@ -9,7 +9,10 @@ module Events
     end
 
     def json_type
-      self.class.name.downcase.gsub('events::', '')
+      self.class.name.gsub('Events::', '').
+        gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+        gsub(/([a-z\d])([A-Z])/,'\1_\2').
+        downcase
     end
 
     def to_json(*)

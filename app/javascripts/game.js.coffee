@@ -221,7 +221,7 @@ class Game
           when "delete"       then @processDeleteMessage   message
           when "reset"        then @processResetMessage    message
           when "score"        then @processScoreMessage    message
-          when "gameend"      then @processGameendMessage  message
+          when "game_end"     then @processGameEndMessage  message
           else
             console.log "unknown message type #{message.type}"
             console.log message
@@ -333,7 +333,7 @@ class Game
     @logger.info "#{message.player_id} nickname: #{message.nickname} score: #{message.score}"
     @players[message.player_id]?.score = message.score
 
-  processGameendMessage: (message) ->
+  processGameEndMessage: (message) ->
     @logger.info "game ended, scoreboard:"
     for id, player of @players
       @logger.info "player #{player.number} score: #{player.score}"
