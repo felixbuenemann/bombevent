@@ -4,7 +4,9 @@ require 'bomb'
 class Player
   include GameObject
 
-  SPEED = 0.25
+  SPEED = 0.125
+  PRECISION = 3
+  CORNER_FUZZ_FACTOR = 4
   INITIAL_MAX_BOMBS = 1
 
   attr_accessor :max_bombs, :explosion_size, :points
@@ -35,13 +37,13 @@ class Player
     new_coordinates = coordinates.dup
     case direction.to_sym
     when :up
-      new_coordinates[1] = (new_coordinates[1] - SPEED).round(2)
+      new_coordinates[1] = (new_coordinates[1] - SPEED).round(PRECISION)
     when :down
-      new_coordinates[1] = (new_coordinates[1] + SPEED).round(2)
+      new_coordinates[1] = (new_coordinates[1] + SPEED).round(PRECISION)
     when :left
-      new_coordinates[0] = (new_coordinates[0] - SPEED).round(2)
+      new_coordinates[0] = (new_coordinates[0] - SPEED).round(PRECISION)
     when :right
-      new_coordinates[0] = (new_coordinates[0] + SPEED).round(2)
+      new_coordinates[0] = (new_coordinates[0] + SPEED).round(PRECISION)
     end
     if valid_coordinates?(*new_coordinates)
       self.coordinates = new_coordinates
@@ -66,22 +68,21 @@ class Player
   def calculate_alternative_coordinates(old_coords, new_coords, direction)
     horizontal = [ :left, :right ]
     vertical   = [ :up,   :down  ]
+    range = -(SPEED*CORNER_FUZZ_FACTOR)..(SPEED*CORNER_FUZZ_FACTOR)
     if horizontal.include? direction
-      new_coords[1] = (new_coords[1] + SPEED).round(2)
-      unless valid_coordinates? *new_coords
-        new_coords[1] = (new_coords[1] - 2 * SPEED).round(2)
-        return old_coords unless valid_coordinates? *new_coords
+      y = new_coords[1]
+      range.step(SPEED) do |step|
+        new_coords[1] = (y + step).round(PRECISION)
+        return new_coords if valid_coordinates? *new_coords
       end
     elsif vertical.include? direction
-      new_coords[0] = (new_coords[0] + SPEED).round(2)
-      unless valid_coordinates? *new_coords
-        new_coords[0] = (new_coords[0] - 2 *SPEED).round(2)
-        return old_coords unless valid_coordinates? *new_coords
+      x = new_coords[0]
+      range.step(SPEED) do |step|
+        new_coords[0] = (x + step).round(PRECISION)
+        return new_coords if valid_coordinates? *new_coords
       end
-    else
-      return old_coords
     end
-    new_coords
+    old_coords
   end
 
   def place_bomb
