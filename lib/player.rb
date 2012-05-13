@@ -4,9 +4,9 @@ require 'bomb'
 class Player
   include GameObject
 
-  SPEED = 0.125
-  PRECISION = 3
-  CORNER_FUZZ_FACTOR = 4
+  SPEED = 0.0625
+  PRECISION = 4
+  CORNER_FUZZ_FACTOR = 8
   INITIAL_MAX_BOMBS = 1
 
   attr_accessor :max_bombs, :explosion_size, :points
