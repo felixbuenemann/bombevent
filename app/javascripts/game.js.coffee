@@ -317,7 +317,7 @@ class Game
       when "player" # someone dies
         #console.log "delete player: " + message.id
         @players[(String) message.id]?.destroy()
-        delete @players[(String) message.id]
+        #delete @players[(String) message.id] # keep for scores
         @logger.info message.id + " died"
 
       else # some entity should be removed
@@ -334,6 +334,7 @@ class Game
     @players[message.player_id]?.score = message.score
 
   processGameendMessage: (message) ->
+    @logger.info "game ended, scoreboard:"
     for id, player of @players
       @logger.info "player #{player.number} score: #{player.score}"
 
