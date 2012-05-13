@@ -44,7 +44,7 @@ class Game
 
   connectServer: ->
     @conn = new Connection
-      onOpen: @joinGame
+      onOpen: @resetGame
       onMessage: @dispatchServerMessage
 
   joinGame: =>
@@ -221,6 +221,7 @@ class Game
           when "delete"       then @processDeleteMessage   message
           when "reset"        then @processResetMessage    message
           when "score"        then @processScoreMessage    message
+          when "gameend"      then @processGameendMessage  message
           else
             console.log "unknown message type #{message.type}"
             console.log message
@@ -280,16 +281,17 @@ class Game
       when "player" # any player has moved
         # assign own player id to user on first movement =)
         if not @player && message.id == @myPlayerId
-          @player = @buildPlayer Crafty.math.randomInt(1, 5) # unimplemented: message.player_number
+          console.log "creating player"
+          @player = @buildPlayer message.player_number % 5
           @players[(String) message.id] = @player
           anyplayer = @player
           @logger.info "hero assigned"
 
         # create other players when they move
         if @players[(String) message.id] is undefined
-          num = 2 # unimplemented: message.player_number % 5
+          num = message.player_number % 5
           anyplayer = (Crafty.e "2D, Canvas, player#{num}, OtherHero#{num}, Animate, Collision")
-          anyplayer.attr("player_number", num)
+          anyplayer.number = message.player_number
           @players[(String) message.id] = anyplayer
           @logger.info "player joined: " + message.id
         else
@@ -313,27 +315,39 @@ class Game
   processDeleteMessage: (message) ->
     switch message.object_type
       when "player" # someone dies
-        console.log "delete player: " + message.id
-        console.log @players
+        #console.log "delete player: " + message.id
         @players[(String) message.id]?.destroy()
+        delete @players[(String) message.id]
         @logger.info message.id + " died"
 
       else # some entity should be removed
-        console.log "delete entity: " + message.id
+        #console.log "delete entity: " + message.id
         @gameObjects[(String) message.id]?.destroy()
+        delete @gameObjects[(String) message.id]
 
   processResetMessage: (message) ->
     console.log "received reset, destroying all players and objects"
+    @resetGame()
+
+  processScoreMessage: (message) ->
+    @logger.info "#{message.player_id} nickname: #{message.nickname} score: #{message.score}"
+    @players[message.player_id]?.score = message.score
+
+  processGameendMessage: (message) ->
+    for id, player of @players
+      @logger.info "player #{player.number} score: #{player.score}"
+
+  resetGame: =>
+    console.log "resetting game"
     # delete players
     for id, player of @players
       player.destroy()
+    @players = {}
     # delete objects
     for id, gameObject of @gameObjects
       gameObject.destroy()
+    @gameObjects = {}
     @resetPlayer()
-
-  processScoreMessage: (message) ->
-    @logger.info "#{message.player_id} #{message.nickname} score: #{message.score}"
 
   resetPlayer: ->
     @player = null
