@@ -152,7 +152,7 @@ class Game
                 type: "move"
                 direction: dir
           )
-          this
+        this
 
   buildOtherHero: (player_number) ->
     self = @
