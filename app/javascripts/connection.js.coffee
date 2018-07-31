@@ -14,7 +14,7 @@ class Connection
     @socket.onmessage = @options.onMessage ? @onMessage
     @socket.onerror = @options.onError ? @onError
 
-  onOpen: (event) =>
+  onOpen: (event) ->
     console.log "connection opened"
 
   onClose: (event) =>
@@ -22,7 +22,7 @@ class Connection
     # alert "connection to server lost"
     @tryReconnect()
 
-  onMessage: (event) =>
+  onMessage: (event) ->
     console.log "message received"
     #console.log event
 

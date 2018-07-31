@@ -116,16 +116,16 @@ class Game
           .animate("walk_down",  0, 2 + player_number, 2)
           # change direction when a direction change event is received
           .bind("NewDirection", (direction) ->
-              if direction.x < 0
-                @stop().animate("walk_left", 10, -1) unless @isPlaying("walk_left")
-              if direction.x > 0
-                @stop().animate("walk_right", 10, -1) unless @isPlaying("walk_right")
-              if direction.y < 0
-                @stop().animate("walk_up", 10, -1) unless @isPlaying("walk_up")
-              if direction.y > 0
-                @stop().animate("walk_down", 10, -1) unless @isPlaying("walk_down")
-              if !direction.x && !direction.y
-                @stop()
+            if direction.x < 0
+              @stop().animate("walk_left", 10, -1) unless @isPlaying("walk_left")
+            if direction.x > 0
+              @stop().animate("walk_right", 10, -1) unless @isPlaying("walk_right")
+            if direction.y < 0
+              @stop().animate("walk_up", 10, -1) unless @isPlaying("walk_up")
+            if direction.y > 0
+              @stop().animate("walk_down", 10, -1) unless @isPlaying("walk_down")
+            if !direction.x && !direction.y
+              @stop()
           )
           # A rudimentary way to prevent the user from passing solid areas
           # or out of boundary
@@ -268,7 +268,8 @@ class Game
           )
 
       when "bomb" # a bomb has been placed
-        @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, bomb, SpriteAnimation").attr(
+        @gameObjects[(String) message.id] = (Crafty.e "2D, DOM, bomb, SpriteAnimation")
+          .attr(
             x: message.coordinates[0] * @spriteSize
             y: message.coordinates[1] * @spriteSize
             z: 30
